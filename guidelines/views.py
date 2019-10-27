@@ -1,0 +1,38 @@
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from .forms import GuidelineForm
+from .models import Guideline
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+
+def guide_view(request): 
+    if request.method == 'POST': 
+        form = GuidelineForm(request.POST, request.FILES) 
+        if form.is_valid(): 
+            form.save() 
+            return redirect('success') 
+    else: 
+        form = GuidelineForm() 
+    return render(request, 'upload.html', {'form' : form}) 
+  
+  
+def success(request): 
+    return HttpResponse('successfuly uploaded')
+
+def display_guideline(request): 
+  
+    if request.method == 'GET': 
+        Guides = Guideline.objects.all()
+        return render(request, 'display.html', {'guides' : Guides})
+
+def edit(request, id):
+    guide = get_object_or_404(Guideline, pk=id)
+    form = GuidelineForm(instance=guide) 
+
+    if request.method == 'POST': 
+        form = GuidelineForm(request.POST, request.FILES, instance=guide) 
+        if form.is_valid(): 
+            form.save()
+            return redirect('success') 
+
+    return render(request, 'edit.html', {'guide': guide, 'form' : form}) 
