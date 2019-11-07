@@ -1,14 +1,21 @@
-{% extends 'base.html' %}
-
-{% block title %} 
-    Register
-{% endblock %}
-
-{% block content %} 
-    <h2> Daftar </h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Daftar Akun</title>
+</head>
+<body>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"> Buat Akun </button>
+        <fieldset>
+            <legend>Daftar Akun</legend>
+            {{ form.as_p }}
+            <button type="submit"> Buat Akun </button>
+        </fieldset>
     </form>
-{% endblock %}
+    <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+    
+</body>
+</html>

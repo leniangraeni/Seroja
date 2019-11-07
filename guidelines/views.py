@@ -4,6 +4,7 @@ from .forms import GuidelineForm
 from .models import Guideline
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.urls import reverse
 
 def guide_view(request): 
     if request.method == 'POST': 
@@ -22,8 +23,8 @@ def success(request):
 def display_guideline(request): 
   
     if request.method == 'GET': 
-        Guides = Guideline.objects.all()
-        return render(request, 'display.html', {'guides' : Guides})
+        guides = Guideline.objects.all()
+        return render(request, 'display.html', {'guides' : guides})
 
 def edit(request, id):
     guide = get_object_or_404(Guideline, pk=id)
@@ -33,6 +34,6 @@ def edit(request, id):
         form = GuidelineForm(request.POST, request.FILES, instance=guide) 
         if form.is_valid(): 
             form.save()
-            return redirect('success') 
+            return HttpResponseRedirect(reverse('guideline:display'))
 
     return render(request, 'edit.html', {'guide': guide, 'form' : form}) 
