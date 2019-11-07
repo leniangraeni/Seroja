@@ -1,15 +1,22 @@
-{% extends 'base.html' %}
-
-{% block title %} 
-    Guideline
-{% endblock %}
-
-{% block content %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Guidelines</title>
+</head>
+<body>
+    <h1>Guidelines</h1>
+    <p><a href="{% url 'welcome' %}">Home</a></p>
+    <hr>
+    
     {% for guideline in guides %} 
         <div class="col-md-4"> 
             {{ guideline.title }} 
-            <img src="{{ guideline.guide.url }}" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;" /> 
+            <img src="{{ guideline.guide.url }}" class="img-responsive" style="width: 50%; float: left; margin-left: 30px;" /> 
         </div> 
-        <a href="{% url 'edit' guideline.id %}"> Ubah </a>
+        <a href="{% url 'guideline:edit' guideline.id %}">Ubah</a>
     {% endfor %} 
-{% endblock %}
+</body>
+</html>
