@@ -26,7 +26,7 @@ SECRET_KEY = '!dezfacre5&ep+8^$w_-64(2ezfx*c6iv!69&o^cym(0#%i46x'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
@@ -126,5 +126,4 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 
-LOGIN_REDIRECT_URL = '/home'
-LOGOUT_REDIRECT_URL = '/accounts/login'
+LOGIN_URL = 'accounts/user_login'
