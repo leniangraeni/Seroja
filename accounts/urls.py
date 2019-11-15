@@ -4,7 +4,9 @@ from . import views
 app_name = 'accounts'
 
 urlpatterns = [
-    path('petugas_signup/', views.petugas_signup, name='signup'),
+    path('home/', views.home, name='home'),
+    path('signup/', views.signup, name='signup'),
+    path('petugas_signup/', views.petugas_signup, name='petugas_signup'),
     path('dokter_signup/', views.dokter_signup, name='dokter_signup'),
     path('apoteker_signup/', views.apoteker_signup, name='apoteker_signup'),
     # path('', include('django.contrib.auth.urls'))

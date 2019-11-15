@@ -5,7 +5,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from accounts.forms import UserForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
+import datetime
 
+def signup(request):
+    return render(request, 'signup.html')
 
 def petugas_signup(request):
     registered = False
@@ -33,7 +36,7 @@ def petugas_signup(request):
     else:
         user_form = UserForm()
 
-    return render(request, 'signup.html', 
+    return render(request, 'signup_form.html', 
                     {'user_form': user_form,
                      'registered': registered})
 
@@ -63,7 +66,7 @@ def dokter_signup(request):
     else:
         user_form = UserForm()
 
-    return render(request, 'signup.html', 
+    return render(request, 'signup_form.html', 
                     {'user_form': user_form,
                      'registered': registered})
 
@@ -93,7 +96,7 @@ def apoteker_signup(request):
     else:
         user_form = UserForm()
 
-    return render(request, 'signup.html', 
+    return render(request, 'signup_form.html', 
                     {'user_form': user_form,
                      'registered': registered})
 
@@ -102,19 +105,12 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        
         user = authenticate(username=username, password=password)
         if user:
-            if user.user_type == 1:
-                login(request, user)
-                return HttpResponse('Berhasil login petugas')
-            if user.user_type == 2:
-                login(request, user)
-                return HttpResponse('Berhasil login dokter')
-            if user.user_type == 3:
-                login(request, user)
-                return HttpResponse('Berhasil login apoteker')
-            
+            login(request, user)
+            return redirect('accounts:home')
+            # return HttpResponse('Berhasil Login')
         else:
             print("login failed")
             print('Username: {} and password {}'.format(username, password))
@@ -124,4 +120,15 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return HttpResponse('Berhasil Logout')
+    return redirect('accounts:login')
+
+def home(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            return render(request, 'petugas/home.html', {'waktu': waktu})
+        if request.user.user_type == 2:
+            return render(request, 'dokter/home.html', {'waktu': waktu})
+        if request.user.user_type == 3:
+            return render(request, 'apoteker/home.html', {'waktu': waktu})

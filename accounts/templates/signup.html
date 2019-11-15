@@ -1,22 +1,59 @@
+{% load static from staticfiles %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Daftar Akun</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SEROJA</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        <fieldset>
-            <legend>Daftar Akun</legend>
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
-            <button type="submit"> Buat Akun </button>
-        </fieldset>
-    </form>
-    <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
-    
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <b>SEROJA</b>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">Daftar Akun</p>
+
+      <div class="social-auth-links text-center">
+        <a href="{% url 'accounts:petugas_signup' %}" class="btn btn-block btn-primary">
+          Petugas Pendaftaran
+        </a>
+        <a href="{% url 'accounts:dokter_signup' %}" class="btn btn-block btn-primary">
+          Dokter
+        </a>
+        <a href="{% url 'accounts:apoteker_signup' %}" class="btn btn-block btn-primary">
+            Apoteker
+        </a>
+      </div>
+
+      <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+    </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
 </body>
 </html>
