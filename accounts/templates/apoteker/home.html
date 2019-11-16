@@ -1,5 +1,4 @@
 {% load static from staticfiles %}
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +33,7 @@
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <span class="col-2"style="text-align-last: center;"><b> Minggu, 13 Mei 2019</b></span>
+    <span class="col-2"style="text-align-last: center;"><b> {{ waktu }} </b></span>
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Notifications Dropdown Menu -->
@@ -87,10 +86,15 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{% static 'dist/img/leni.jpg' %}" class="img-circle elevation-2" alt="User Image">
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" class="img-circle elevation-2" alt="User Image">
+        {% else %}
+            <img src="{% static 'dist/img/AdminLTELogo.png' %}" class="img-circle elevation-2" alt="User Image">
+        {% endif %}
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ request.user.username }}</a>
+          <a href="#" class="d-block">{{ user.username }}</a>
+          <p>Apoteker</p>
         </div>
       </div>
 
@@ -111,36 +115,13 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
-                Petugas Pendaftaran
+                Log Obat Keluar
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-md"></i>
-              <p>
-                Dokter
-               </p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-male"></i>
-              <p>
-                Apoteker
-              </p>
-            </a>
-            </li>
-          <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-wheelchair"></i>
-                <p>
-                  Pasien
-                </p>
-              </a>
-          </li>
           <li class="nav-item bg-danger" style="margin-top:170px; border-radius: 5pt;">
-                <a href="{% url 'accounts:logout' %}" class="nav-link">
+                <a href="{% url 'accounts:login' %}" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>
                   <p>
                     Keluar

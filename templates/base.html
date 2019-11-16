@@ -14,7 +14,7 @@
     <hr>
     {% if user.is_authenticated %}
         <a href="{% url 'accounts:logout' %}">Logout</a> 
-        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'accounts:home' %}">Home</a>
     {% else %}
         <a href="{% url 'accounts:login' %}">Login</a>
         <a href="{% url 'accounts:signup' %}">Daftar</a>
