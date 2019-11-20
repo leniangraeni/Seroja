@@ -11,14 +11,10 @@ def guide_view(request):
         form = GuidelineForm(request.POST, request.FILES) 
         if form.is_valid(): 
             form.save() 
-            return redirect('success') 
+            return HttpResponse('successfuly uploaded')
     else: 
         form = GuidelineForm() 
     return render(request, 'upload.html', {'form' : form}) 
-  
-  
-def success(request): 
-    return HttpResponse('successfuly uploaded')
 
 def display_guideline(request): 
   
