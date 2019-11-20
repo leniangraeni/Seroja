@@ -15,14 +15,21 @@ class Akun(models.Model):
         (0, 'laki-laki'),
         (1, 'perempuan'),
     )
+    TIPE_CHOICES = (
+        (0, 'pasien'),
+        (1, 'petugas'),
+        (2, 'dokter'),
+        (3, 'apoteker'),
+    )
 
     # Informasi data diri Akun
     nama          = models.CharField(max_length=20)
     tempat_lahir  = models.CharField(max_length=20)
     tanggal_lahir = models.DateField()
-    jenis_kelamin = models.CharField(max_length=10, choices=JK_CHOICES)
+    jenis_kelamin = models.PositiveIntegerField(choices=JK_CHOICES)
     nomor_telepon = models.CharField(max_length=15)
     alamat        = models.TextField()
+    tipe          = models.PositiveIntegerField(choices=TIPE_CHOICES)
 
     class Meta():
         abstract = True

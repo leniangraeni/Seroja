@@ -11,32 +11,18 @@ class UserForm(forms.ModelForm):
             'username', 'password',
         )
 
-class PetugasForm(forms.ModelForm):
-    nomor_telepon = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
-    nomor_pegawai = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
+class AkunRegistrationForm(forms.Form):
+    # Pilihan Masukan
+    JK_CHOICES = (
+        (0, 'laki-laki'),
+        (1, 'perempuan'),
+    )
 
-    class Meta():
-        model = PetugasInfo
-        fields = (
-            'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'nomor_telepon', 'alamat', 'nomor_pegawai', 'surat_tugas', 'profil',
-        )
-
-class DokterForm(forms.ModelForm):
-    nomor_telepon = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
-    nomor_pegawai = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
-
-    class Meta():
-        model = DokterInfo
-        fields = (
-            'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'nomor_telepon', 'alamat', 'nomor_pegawai', 'surat_tugas', 'profil',
-        )
-
-class ApotekerForm(forms.ModelForm):
-    nomor_telepon = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
-    nomor_pegawai = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
-
-    class Meta():
-        model = ApotekerInfo
-        fields = (
-            'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'nomor_telepon', 'alamat', 'nomor_pegawai', 'surat_tugas', 'profil',
-        )
+    # Informasi Datadiri
+    nama          = forms.CharField(max_length=20)
+    tempat_lahir  = forms.CharField(max_length=20)
+    tanggal_lahir = forms.DateField()
+    jenis_kelamin = forms.ChoiceField(choices=JK_CHOICES)
+    nomor_telepon = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'type':'number'}))
+    alamat        = forms.CharField(widget=forms.Textarea())
+    tipe          = forms.IntegerField()

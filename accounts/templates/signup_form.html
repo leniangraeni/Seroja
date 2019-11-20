@@ -17,7 +17,7 @@
         </fieldset>
     </form>
     <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
-    
+
 </body>
 </html>
  -->
@@ -31,7 +31,7 @@
    <title>Seroja | {{ akun }}</title>
    <!-- Tell the browser to be responsive to screen width -->
    <meta name="viewport" content="width=device-width, initial-scale=1">
- 
+
    <!-- Font Awesome -->
    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
    <!-- Ionicons -->
@@ -48,78 +48,90 @@
    <div class="register-logo">
      <a href="#"><b>Daftar Akun </b>{{ akun }}</a>
    </div>
- 
-   <div class="card">
-     <div class="card-body register-card-body">
-       <p class="login-box-msg">Register a new membership</p>
- 
-       <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <!-- {{ form.as_p}}
-            <button type="submit"> Masuk </button> -->
-            <div class="input-group mb-3">
-              <input type="text"  name="username" class="form-control" placeholder="Nomor Pegawai">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-edit"></span>
+
+   {% if registered %}
+     <h1>Registrasi Berhasil</h1>
+     <p>
+       Akun anda telah berhasil dibuat dan sedang dalam tahap validasi oleh Admin. <br>
+       Anda dapat Login namun hanya akan bisa menggunakan fitur jika akun anda telah divalidasi dan diaktifkan oleh Admin. <br>
+       Untuk info lebih lanjut silahkan hubungi Siapa hayo<br>
+     </p>
+
+     <a href="{% url "accounts:login" %}">Kembali ke Halaman Login</a>
+   {% else %}
+     <div class="card">
+       <div class="card-body register-card-body">
+         <p class="login-box-msg">Register a new membership</p>
+
+         <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <!-- {{ form.as_p}}
+              <button type="submit"> Masuk </button> -->
+              <div class="input-group mb-3">
+                <input type="text"  name="username" class="form-control" placeholder="Nomor Pegawai">
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-edit"></span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text"  name="first_name" class="form-control" placeholder="Nama Lengkap">
+              <div class="input-group mb-3">
+                  <input type="text"  name="first_name" class="form-control" placeholder="Nama Lengkap">
+                  <div class="input-group-append">
+                      <div class="input-group-text">
+                      <span class="fas fa-user"></span>
+                      </div>
+                  </div>
+              </div>
+              <div class="input-group mb-3">
+                  <input type="email"  name="email" class="form-control" placeholder="Email">
+                  <div class="input-group-append">
+                      <div class="input-group-text">
+                          <span class="fas fa-envelope"></span>
+                      </div>
+                  </div>
+              </div>
+              <div class="input-group mb-3">
+                <input type="password" name="password" class="form-control" placeholder="Kata sandi">
                 <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-user"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="email"  name="email" class="form-control" placeholder="Email">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="password" name="password" class="form-control" placeholder="Kata sandi">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
+                  <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="file" name="avatar" class="form-control" placeholder="Foto Profil">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-image"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                    <input type="file" name="surat_tugas" class="form-control" placeholder="Foto Surat Tugas">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-file"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-              <!-- /.col -->
-              <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block btn-flat" style="border-radius:20pt; box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">Daftar</button>
+              <div class="input-group mb-3">
+                  <input type="file" name="avatar" class="form-control" placeholder="Foto Profil">
+                  <div class="input-group-append">
+                      <div class="input-group-text">
+                      <span class="fas fa-image"></span>
+                      </div>
+                  </div>
               </div>
-              <!-- /.col -->
-            </div>
-        </form>
-       <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
-     </div>
-     <!-- /.form-box -->
-   </div><!-- /.card -->
+              <div class="input-group mb-3">
+                      <input type="file" name="surat_tugas" class="form-control" placeholder="Foto Surat Tugas">
+                  <div class="input-group-append">
+                      <div class="input-group-text">
+                      <span class="fas fa-file"></span>
+                      </div>
+                  </div>
+              </div>
+              <input type="hidden" name="" value="">
+              <div class="row">
+                <!-- /.col -->
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary btn-block btn-flat" style="border-radius:20pt; box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">Daftar</button>
+                </div>
+                <!-- /.col -->
+              </div>
+          </form>
+         <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+       </div>
+       <!-- /.form-box -->
+     </div><!-- /.card -->
+   {% endif %}
  </div>
  <!-- /.register-box -->
- 
+
  <!-- jQuery -->
  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
  <!-- Bootstrap 4 -->

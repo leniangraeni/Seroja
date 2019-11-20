@@ -27,18 +27,18 @@ def petugas_signup(request):
             user.set_password(user.password)
             user.user_type  = 1
             user.save()
-            
+
 
             registered = True
             return HttpResponse('Berhasil membuat akun')
-        
+
         else:
             print(user_form.errors)
-    
+
     else:
         user_form = UserForm()
 
-    return render(request, 'signup_form.html', 
+    return render(request, 'signup_form.html',
                     {'user_form': user_form,
                      'registered': registered,
                      'akun': akun})
@@ -63,14 +63,14 @@ def dokter_signup(request):
 
             registered = True
             return HttpResponse('Berhasil membuat akun')
-        
+
         else:
             print(user_form.errors)
-    
+
     else:
         user_form = UserForm()
 
-    return render(request, 'signup_form.html', 
+    return render(request, 'signup_form.html',
                     {'user_form': user_form,
                      'registered': registered,
                      'akun': akun})
@@ -94,14 +94,14 @@ def apoteker_signup(request):
 
             registered = True
             return HttpResponse('Berhasil membuat akun')
-        
+
         else:
             print(user_form.errors)
-    
+
     else:
         user_form = UserForm()
 
-    return render(request, 'signup_form.html', 
+    return render(request, 'signup_form.html',
                     {'user_form': user_form,
                      'registered': registered,
                      'akun': akun})
@@ -111,7 +111,7 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
+
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
@@ -120,7 +120,7 @@ def user_login(request):
         else:
             print("login failed")
             print('Username: {} and password {}'.format(username, password))
-    
+
     else:
         return render(request, 'login.html')
 
