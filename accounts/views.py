@@ -12,6 +12,7 @@ def signup(request):
 
 def petugas_signup(request):
     registered = False
+    akun = 'Petugas'
 
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
@@ -26,6 +27,7 @@ def petugas_signup(request):
             user.set_password(user.password)
             user.user_type  = 1
             user.save()
+            
 
             registered = True
             return HttpResponse('Berhasil membuat akun')
@@ -38,10 +40,12 @@ def petugas_signup(request):
 
     return render(request, 'signup_form.html', 
                     {'user_form': user_form,
-                     'registered': registered})
+                     'registered': registered,
+                     'akun': akun})
 
 def dokter_signup(request):
     registered = False
+    akun = 'Dokter'
 
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
@@ -68,11 +72,12 @@ def dokter_signup(request):
 
     return render(request, 'signup_form.html', 
                     {'user_form': user_form,
-                     'registered': registered})
+                     'registered': registered,
+                     'akun': akun})
 
 def apoteker_signup(request):
     registered = False
-
+    akun = 'Apoteker'
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
 
@@ -98,7 +103,8 @@ def apoteker_signup(request):
 
     return render(request, 'signup_form.html', 
                     {'user_form': user_form,
-                     'registered': registered})
+                     'registered': registered,
+                     'akun': akun})
 
 
 def user_login(request):

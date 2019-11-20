@@ -28,7 +28,7 @@
  <head>
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <title>AdminLTE 3 | Registration Page</title>
+   <title>Seroja | {{ akun }}</title>
    <!-- Tell the browser to be responsive to screen width -->
    <meta name="viewport" content="width=device-width, initial-scale=1">
  
@@ -46,7 +46,7 @@
  <body class="hold-transition register-page">
  <div class="register-box">
    <div class="register-logo">
-     <a href="#"><b>Admin</b>LTE</a>
+     <a href="#"><b>Daftar Akun </b>{{ akun }}</a>
    </div>
  
    <div class="card">
@@ -58,28 +58,20 @@
             <!-- {{ form.as_p}}
             <button type="submit"> Masuk </button> -->
             <div class="input-group mb-3">
-              <input type="text"  name="username" class="form-control" placeholder="Username">
+              <input type="text"  name="username" class="form-control" placeholder="Nomor Pegawai">
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
+                  <span class="fas fa-edit"></span>
                 </div>
               </div>
             </div>
             <div class="input-group mb-3">
-                <input type="text"  name="first_name" class="form-control" placeholder="First Name">
+                <input type="text"  name="first_name" class="form-control" placeholder="Nama Lengkap">
                 <div class="input-group-append">
                     <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
+                    <span class="fas fa-user"></span>
                     </div>
                 </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text"  name="last_name" class="form-control" placeholder="Last Name">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
-                </div>
-            </div>
             </div>
             <div class="input-group mb-3">
                 <input type="email"  name="email" class="form-control" placeholder="Email">
@@ -98,18 +90,10 @@
               </div>
             </div>
             <div class="input-group mb-3">
-                <input type="text" name="nomor_pegawai" class="form-control" placeholder="Nomor Pegawai">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
                 <input type="file" name="avatar" class="form-control" placeholder="Foto Profil">
                 <div class="input-group-append">
                     <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
+                    <span class="fas fa-image"></span>
                     </div>
                 </div>
             </div>
@@ -117,7 +101,7 @@
                     <input type="file" name="surat_tugas" class="form-control" placeholder="Foto Surat Tugas">
                 <div class="input-group-append">
                     <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
+                    <span class="fas fa-file"></span>
                     </div>
                 </div>
             </div>

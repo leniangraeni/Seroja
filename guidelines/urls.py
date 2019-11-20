@@ -7,8 +7,7 @@ from . import views
 app_name = 'guideline'
 
 urlpatterns = [
-    path('upload/', views.guide_view, name = 'upload'), 
-    path('success/', views.success, name = 'success'), 
+    path('upload/', views.guide_view, name = 'upload'),
     path('', views.display_guideline, name = 'display'),
     path('edit/<int:id>', views.edit, name='edit'),
  ] 
