@@ -8,8 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 # Model dan Form
-from accounts.forms import UserForm, AkunRegistrationForm
-from accounts.models import PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
+from accounts.forms import SerojaUserForm, AkunRegistrationForm
+from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 
 # Fungsi utilitas
 import datetime
@@ -28,7 +28,6 @@ def akun_to_model(akunForm, modelTemplate):
     container.jenis_kelamin = akunForm.cleaned_data['jenis_kelamin']
     container.nomor_telepon = akunForm.cleaned_data['nomor_telepon']
     container.alamat = akunForm.cleaned_data['alamat']
-    container.tipe = akunForm.cleaned_data['tipe']
 
     return container
 
@@ -37,7 +36,7 @@ def akun_register(request, tipe):
     registered = False
 
     if request.method == "POST":
-        user_form = UserForm(data=request.POST)
+        user_form = SerojaUserForm(data=request.POST)
         akun_form = AkunRegistrationForm(data=request.POST)
 
         if user_form.is_valid() and akun_form.is_valid():
@@ -59,13 +58,13 @@ def akun_register(request, tipe):
 
             registered = True
         else:
-            if tipe == 1:
+            if tipe == 'pasien':
                 messages.info(request, "Username telah digunakan")
             else:
                 messages.info(request, "Nomor Pegawai telah digunakan")
             return redirect("accounts:akun_register", tipe=tipe)
     else:
-        user_form = UserForm()
+        user_form = SerojaUserForm()
         akun_form = AkunRegistrationForm()
 
     return render(request, "akun_register.html", context={
@@ -75,8 +74,25 @@ def akun_register(request, tipe):
                                                         'tipe': tipe,
                                                      })
 # Halaman untuk login akun
-def user_login(request):
-    if request.method == 'POST':
+# def user_login(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#
+#         user = authenticate(username=username, password=password)
+#         if user:
+#             login(request, user)
+#             return redirect('accounts:home')
+#             # return HttpResponse('Berhasil Login')
+#         else:
+#             print("login failed")
+#             print('Username: {} and password {}'.format(username, password))
+#
+#     else:
+#         return render(request, 'login.html')
+
+def akun_login(request):
+    if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -84,25 +100,35 @@ def user_login(request):
         if user:
             login(request, user)
             return redirect('accounts:home')
-            # return HttpResponse('Berhasil Login')
         else:
-            print("login failed")
-            print('Username: {} and password {}'.format(username, password))
-
+            messages.info(request, "Nomor Pegawai atau Password salah")
+            return redirect('accounts:login')
     else:
         return render(request, 'login.html')
 
-def akun_login(rqeuest):
-    
+def akun_logout(request):
+    logout(request)
+    redirect('welcome')
 
 # Halaman home untuk pengguna yang sudah login
+## Utilitas untuk mendapatkan informasi akun berdasarkan tipe
+def load_akun_by_tipe(user, tipe):
+    if tipe == 'petugas':
+        akun_data = PetugasInfo.objects.get(user=user)
+    elif tipe == 'dokter':
+        akun_data = DokterInfo.objects.get(user=user)
+    elif tipe == 'apoteker':
+        akun_data = ApotekerInfo.objects.get(user=user)
+    return akun_data
+
+## Halaman beranda/Home
 def home(request):
     waktu = datetime.datetime.now()
     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/homInformasi tidak valide.html', {'waktu': waktu})
-        if request.user.user_type == 2:
-            return render(request, 'dokter/home.html', {'waktu': waktu})
-        if request.user.user_type == 3:
-            return render(request, 'apoteker/home.html', {'waktu': waktu})
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        return render(request, 'home.html', context={
+                                                'waktu': waktu,
+                                                'user': akun,
+                                            })

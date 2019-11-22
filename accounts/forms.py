@@ -1,15 +1,18 @@
-from django import forms
-from django.contrib.auth.models import User
-from accounts.models import PetugasInfo, DokterInfo, ApotekerInfo
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-class UserForm(forms.ModelForm):
+from django import forms
+from accounts.models import SerojaUser, PetugasInfo, DokterInfo, ApotekerInfo
+
+class SerojaUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
+    tipe     = forms.CharField(widget=forms.HiddenInput)
 
     class Meta():
-        model = User
+        model = SerojaUser
         fields = (
-            'username', 'password',
+            'username', 'password', 'tipe',
         )
+
 
 class AkunRegistrationForm(forms.Form):
     # Pilihan Masukan
@@ -25,4 +28,3 @@ class AkunRegistrationForm(forms.Form):
     jenis_kelamin = forms.ChoiceField(choices=JK_CHOICES)
     nomor_telepon = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'type':'number'}))
     alamat        = forms.CharField(widget=forms.Textarea())
-    tipe          = forms.CharField(widget=forms.HiddenInput())

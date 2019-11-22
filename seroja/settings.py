@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# User Authentication
+AUTH_USER_MODEL = 'accounts.SerojaUser'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -81,7 +84,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -125,4 +127,5 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 
-LOGIN_URL = 'accounts/user_login'
+# Login
+LOGIN_URL = 'accounts/login'

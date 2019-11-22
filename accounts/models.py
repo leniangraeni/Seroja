@@ -1,25 +1,32 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 # Create your models here.
+
+# Model ekstensi dari User
+class SerojaUser(AbstractUser):
+    # Pilihan Masukan
+    TIPE_CHOICES = (
+        ('admin', 'Admin'),
+        ('pasien', 'Pasien'),
+        ('petugas', 'Petugas'),
+        ('dokter', 'Dokter'),
+        ('apoteker', 'Apoteker'),
+    )
+
+    tipe = models.CharField(max_length=10, choices=TIPE_CHOICES, default='admin')
 
 # Model Abstrak untuk semua akun
 class Akun(models.Model):
     # Untuk Autentikasi
     # username = username (pasien), nomor_pegawai (petugas)
     # password
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Pilihan Masukan
     JK_CHOICES = (
         ('L', 'Laki-laki'),
         ('P', 'Perempuan'),
-    )
-    TIPE_CHOICES = (
-        ('pasien', 'Pasien'),
-        ('petugas', 'Petugas'),
-        ('dokter', 'Dokter'),
-        ('apoteker', 'Apoteker'),
     )
 
     # Informasi data diri Akun
@@ -29,7 +36,6 @@ class Akun(models.Model):
     jenis_kelamin = models.CharField(max_length=1, choices=JK_CHOICES)
     nomor_telepon = models.CharField(max_length=15)
     alamat        = models.TextField()
-    tipe          = models.CharField(max_length=10, choices=TIPE_CHOICES)
 
     class Meta():
         abstract = True
