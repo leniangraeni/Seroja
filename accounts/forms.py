@@ -14,8 +14,8 @@ class UserForm(forms.ModelForm):
 class AkunRegistrationForm(forms.Form):
     # Pilihan Masukan
     JK_CHOICES = (
-        (0, 'laki-laki'),
-        (1, 'perempuan'),
+        ('L', 'Laki-laki'),
+        ('P', 'Perempuan'),
     )
 
     # Informasi Datadiri
@@ -25,4 +25,4 @@ class AkunRegistrationForm(forms.Form):
     jenis_kelamin = forms.ChoiceField(choices=JK_CHOICES)
     nomor_telepon = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'type':'number'}))
     alamat        = forms.CharField(widget=forms.Textarea())
-    tipe          = forms.IntegerField()
+    tipe          = forms.CharField(widget=forms.HiddenInput())

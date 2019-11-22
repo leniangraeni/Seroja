@@ -31,14 +31,14 @@
       <p class="login-box-msg">Daftar Akun</p>
 
       <div class="social-auth-links text-center">
-        <a href="{% url 'accounts:petugas_signup' %}" class="btn btn-block btn-primary">
-          Petugas Pendaftaran
+        <a href="{% url 'accounts:akun_register' tipe='petugas' %}" class="btn btn-block btn-primary">
+          Petugas
         </a>
-        <a href="{% url 'accounts:dokter_signup' %}" class="btn btn-block btn-primary">
+        <a href="{% url 'accounts:akun_register' tipe='dokter' %}" class="btn btn-block btn-primary">
           Dokter
         </a>
-        <a href="{% url 'accounts:apoteker_signup' %}" class="btn btn-block btn-primary">
-            Apoteker
+        <a href="{% url 'accounts:akun_register' tipe='apoteker' %}" class="btn btn-block btn-primary">
+          Apoteker
         </a>
       </div>
 

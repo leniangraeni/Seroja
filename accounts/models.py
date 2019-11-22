@@ -12,24 +12,24 @@ class Akun(models.Model):
 
     # Pilihan Masukan
     JK_CHOICES = (
-        (0, 'laki-laki'),
-        (1, 'perempuan'),
+        ('L', 'Laki-laki'),
+        ('P', 'Perempuan'),
     )
     TIPE_CHOICES = (
-        (0, 'pasien'),
-        (1, 'petugas'),
-        (2, 'dokter'),
-        (3, 'apoteker'),
+        ('pasien', 'Pasien'),
+        ('petugas', 'Petugas'),
+        ('dokter', 'Dokter'),
+        ('apoteker', 'Apoteker'),
     )
 
     # Informasi data diri Akun
     nama          = models.CharField(max_length=20)
     tempat_lahir  = models.CharField(max_length=20)
     tanggal_lahir = models.DateField()
-    jenis_kelamin = models.PositiveIntegerField(choices=JK_CHOICES)
+    jenis_kelamin = models.CharField(max_length=1, choices=JK_CHOICES)
     nomor_telepon = models.CharField(max_length=15)
     alamat        = models.TextField()
-    tipe          = models.PositiveIntegerField(choices=TIPE_CHOICES)
+    tipe          = models.CharField(max_length=10, choices=TIPE_CHOICES)
 
     class Meta():
         abstract = True
@@ -61,7 +61,7 @@ class PetugasInfo(Akun):
         db_table = 'PetugasInfo'
 
     def __str__(self):
-        self.nama
+        return self.nama
 
 # Model untuk Dokter (turunan Akun)
 class DokterInfo(Akun):
@@ -76,7 +76,7 @@ class DokterInfo(Akun):
         db_table = 'DokterInfo'
 
     def __str__(self):
-        self.nama
+        return self.nama
 
 # Model untuk Apoteker (turunan Akun)
 class ApotekerInfo(Akun):
@@ -90,4 +90,4 @@ class ApotekerInfo(Akun):
         db_table = 'ApotekerInfo'
 
     def __str__(self):
-        self.nama
+        return self.nama
