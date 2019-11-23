@@ -55,19 +55,19 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" class="img-circle elevation-2" alt="User Image">
+        {% if user.profil %}
+            <img src="{{ user.profil.url }}" class="img-circle elevation-2" alt="User Image">
         {% else %}
             <img src="{% static 'dist/img/AdminLTELogo.png' %}" class="img-circle elevation-2" alt="User Image">
         {% endif %}
         </div>
         <div class="info">
-          <a href="{% url 'accounts:profil' %}" class="d-block">{{ user.first_name }}</a>
-        {% if user.user_type == 1 %}
+          <a href="{% url 'accounts:profil' %}" class="d-block">{{ user.nama }}</a>
+        {% if request.user.tipe == 'petugas' %}
             <font color="white">Petugas</font>
-        {% elif user.user_type == 2 %}
+        {% elif request.user.tipe == 'dokter' %}
             <font color="white">Dokter</font>
-        {% elif user.user_type == 3 %}
+        {% elif request.user.tipe == 'apoteker' %}
             <font color="white">Apoteker</font>
         {% endif %}
         </div>

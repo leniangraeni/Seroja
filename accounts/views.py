@@ -1,29 +1,7 @@
 # Fungsi untuk mengirim dan menerima informasi dari template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-<<<<<<< HEAD
-from accounts.forms import UserForm
-from django.contrib.auth.decorators import login_required
-from accounts.models import User
-import datetime
-from guidelines.models import Guideline
-
-
-waktu = datetime.datetime.now()
-waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-
-def signup(request):
-    return render(request, 'signup.html')
-
-def petugas_signup(request):
-    registered = False
-    akun = 'Petugas'
-
-    if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-=======
 from django.contrib import messages
->>>>>>> 43e1ff24caf09a50950986b8b13a4b93fbea6ddc
 
 # Fungsi untuk autentikasi dan session
 from django.contrib.auth import authenticate, login, logout
@@ -32,9 +10,11 @@ from django.contrib.auth.decorators import login_required
 # Model dan Form
 from accounts.forms import SerojaUserForm, AkunRegistrationForm
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
+from guidelines.models import Guideline
 
 # Fungsi utilitas
 import datetime
+
 
 # Halaman pilihan jenis login
 def register(request):
@@ -145,65 +125,92 @@ def load_akun_by_tipe(user, tipe):
 
 ## Halaman beranda/Home
 def home(request):
-<<<<<<< HEAD
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/home.html', {'waktu': waktu})
-        if request.user.user_type == 2:
-            return render(request, 'dokter/home.html', {'waktu': waktu})
-        if request.user.user_type == 3:
-            return render(request, 'apoteker/home.html', {'waktu': waktu})
-
-def log_obat(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 2:
-            return render(request, 'dokter/log_pemberian_obat.html', {'waktu': waktu})
-        if request.user.user_type == 3:
-            return render(request, 'apoteker/log_obat_keluar.html', {'waktu': waktu})
-
-def profil(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/profil.html', {'waktu': waktu})
-        if request.user.user_type == 2:
-            return render(request, 'dokter/profil.html', {'waktu': waktu})
-        if request.user.user_type == 3:
-            return render(request, 'apoteker/profil.html', {'waktu': waktu})
-
-def pengaturan(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/pengaturan.html', {'waktu': waktu})
-        if request.user.user_type == 2:
-            return render(request, 'dokter/pengaturan.html', {'waktu': waktu})
-        if request.user.user_type == 3:
-            return render(request, 'apoteker/pengaturan.html', {'waktu': waktu})
-
-def antrian_pasien(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/antrian_pasien.html', {'waktu': waktu})
-
-def poli(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            return render(request, 'petugas/poli.html', {'waktu': waktu})
-
-def petunjuk(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == 1:
-            guides = Guideline.objects.all()
-            return render(request, 'petugas/petunjuk.html', 
-                        {'guides' : guides,
-                        'waktu': waktu})
-=======
     waktu = datetime.datetime.now()
     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
     user = request.user
     if user.is_authenticated:
         akun = load_akun_by_tipe(user, user.tipe)
-        return render(request, 'home.html', context={
+        if user.tipe == 'petugas':
+            return render(request, 'petugas/home.html', context={
                                                 'waktu': waktu,
                                                 'user': akun,
                                             })
->>>>>>> 43e1ff24caf09a50950986b8b13a4b93fbea6ddc
+        if user.tipe == 'dokter':
+            return render(request, 'dokter/home.html', context={
+                                                'waktu': waktu,
+                                                'user': akun,
+                                            })
+        if user.tipe == 'apoteker':
+            return render(request, 'apoteker/home.html', context={
+                                                'waktu': waktu,
+                                                'user': akun,
+                                            })
+
+# Ini buat ngetest redirect nanti kalo mau dibagusin diapus aja ya
+def log_obat(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'dokter':
+            return render(request, 'dokter/log_pemberian_obat.html', {'waktu': waktu, 'user': akun})
+        if user.tipe == 'apoteker':
+            return render(request, 'apoteker/log_obat_keluar.html', {'waktu': waktu, 'user': akun})
+
+def profil(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'petugas':
+            return render(request, 'petugas/profil.html', {'waktu': waktu, 'user': akun})
+        if user.tipe == 'dokter':
+            return render(request, 'dokter/profil.html', {'waktu': waktu, 'user': akun})
+        if user.tipe == 'apoteker':
+            return render(request, 'apoteker/profil.html', {'waktu': waktu, 'user': akun})
+
+
+def pengaturan(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'petugas':
+            return render(request, 'petugas/pengaturan.html', {'waktu': waktu, 'user': akun})
+        if user.tipe == 'dokter':
+            return render(request, 'dokter/pengaturan.html', {'waktu': waktu, 'user': akun})
+        if user.tipe == 'apoteker':
+            return render(request, 'apoteker/pengaturan.html', {'waktu': waktu, 'user': akun})
+
+def antrian_pasien(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'petugas':
+            return render(request, 'petugas/antrian_pasien.html', {'waktu': waktu, 'user': akun})
+
+def poli(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'petugas':
+            return render(request, 'petugas/poli.html', {'waktu': waktu, 'user': akun})
+
+def petunjuk(request):
+    waktu = datetime.datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    user = request.user
+    if user.is_authenticated:
+        akun = load_akun_by_tipe(user, user.tipe)
+        if user.tipe == 'petugas':
+            guides = Guideline.objects.all()
+            return render(request, 'petugas/petunjuk.html', 
+                        {'guides' : guides,
+                        'waktu': waktu, 'user': akun})

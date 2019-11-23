@@ -20,7 +20,6 @@
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<<<<<<< HEAD
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="register-logo">
@@ -28,17 +27,6 @@
   </div>
 
   <div class="card">
-=======
-<body>
-    {% block title %} {% endblock %}
-    <hr>
-    {% if user.is_authenticated %}
-        <a href="{% url 'accounts:home' %}">Home</a>
-    {% else %}
-        <a href="{% url 'accounts:login' %}">Login</a>
-        <a href="{% url 'accounts:register' %}">Daftar</a>
-    {% endif %}
->>>>>>> 43e1ff24caf09a50950986b8b13a4b93fbea6ddc
     {% block content %} {% endblock %}
     <!-- /.form-box -->
   </div><!-- /.card -->

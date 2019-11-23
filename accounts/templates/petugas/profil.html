@@ -14,23 +14,29 @@
             <tbody>
             <tr>
                 <td width='25%'>Nama Lengkap</td>
-                <td>{{ user.first_name }}</td>
+                <td>{{ user.nama }}</td>
             </tr>
             <tr>
                 <td>Tempat, Tanggal Lahir</td>
-                <td>Jakarta, 23 Februari 1998</td>
+                <td>{{ user.tempat_lahir }}, {{ user.tanggal_lahir }}</td>
             </tr>
             <tr>
                 <td>Jenis Kelamin</td>
-                <td>Laki-laki</td>
+                {% if user.jenis_kelamin == 'P' %}
+                  <td>Perempuan</td>
+                {% elif user.jenis_kelamin == 'L' %}
+                  <td>Laki-laki</td>
+                {% endif %}
             </tr>
             <tr>
                 <td>Nomor Pegawai</td>
-                <td>{{ user.username }}</td>
+                <td>{{ request.user.username }}</td>
             </tr>
             <tr>
                 <td>Surat Tugas</td>
-                <td><img src="{{ user.surat_tugas.url }}" style="width: 300px;"></td>
+                {% if user.surat_tugas %}
+                  <td><img src="{{ user.surat_tugas.url }}" style="width: 300px;"></td>
+                {% endif %}
             </tr>
             </tbody>
           </table>
