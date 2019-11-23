@@ -1,0 +1,31 @@
+{% extends 'base_akun.html' %}
+
+{% block body-1 %} 
+    <a href="{% url 'accounts:home' %}" class="nav-link">
+        <i class="nav-icon fas fa-home"></i>  
+        <p>Dashboard</p>
+    </a>
+{% endblock %}
+
+{% block body-2 %} 
+    <a href="{% url 'accounts:antrian' %}" class="nav-link">
+        <i class="nav-icon fas fa-user-plus"></i>  
+        <p>Antrian Pasien</p>
+    </a>
+{% endblock %}
+
+{% block body-3 %} 
+    <a href="{% url 'accounts:poli' %}" class="nav-link">
+        <i class="nav-icon fas fa-medkit"></i>  
+        <p>Poli</p>
+    </a>
+{% endblock %}
+
+{% block body-4 %} 
+    <a href="{% url 'accounts:petunjuk' %}" class="nav-link">
+        <i class="nav-icon fas fa-file"></i>  
+        <p>Petunjuk Berobat</p>
+    </a>
+{% endblock %}
+
+{% block content %} {% endblock %}

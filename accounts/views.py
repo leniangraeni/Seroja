@@ -6,6 +6,11 @@ from accounts.forms import UserForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
 import datetime
+from guidelines.models import Guideline
+
+
+waktu = datetime.datetime.now()
+waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
 
 def signup(request):
     return render(request, 'signup.html')
@@ -129,8 +134,6 @@ def user_logout(request):
     return redirect('accounts:login')
 
 def home(request):
-    waktu = datetime.datetime.now()
-    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
     if request.user.is_authenticated:
         if request.user.user_type == 1:
             return render(request, 'petugas/home.html', {'waktu': waktu})
@@ -138,3 +141,46 @@ def home(request):
             return render(request, 'dokter/home.html', {'waktu': waktu})
         if request.user.user_type == 3:
             return render(request, 'apoteker/home.html', {'waktu': waktu})
+
+def log_obat(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 2:
+            return render(request, 'dokter/log_pemberian_obat.html', {'waktu': waktu})
+        if request.user.user_type == 3:
+            return render(request, 'apoteker/log_obat_keluar.html', {'waktu': waktu})
+
+def profil(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            return render(request, 'petugas/profil.html', {'waktu': waktu})
+        if request.user.user_type == 2:
+            return render(request, 'dokter/profil.html', {'waktu': waktu})
+        if request.user.user_type == 3:
+            return render(request, 'apoteker/profil.html', {'waktu': waktu})
+
+def pengaturan(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            return render(request, 'petugas/pengaturan.html', {'waktu': waktu})
+        if request.user.user_type == 2:
+            return render(request, 'dokter/pengaturan.html', {'waktu': waktu})
+        if request.user.user_type == 3:
+            return render(request, 'apoteker/pengaturan.html', {'waktu': waktu})
+
+def antrian_pasien(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            return render(request, 'petugas/antrian_pasien.html', {'waktu': waktu})
+
+def poli(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            return render(request, 'petugas/poli.html', {'waktu': waktu})
+
+def petunjuk(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 1:
+            guides = Guideline.objects.all()
+            return render(request, 'petugas/petunjuk.html', 
+                        {'guides' : guides,
+                        'waktu': waktu})

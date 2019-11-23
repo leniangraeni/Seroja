@@ -12,4 +12,11 @@ urlpatterns = [
     # path('', include('django.contrib.auth.urls'))
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+
+    path('log_obat/', views.log_obat, name='log_obat'),
+    path('profil/', views.profil, name='profil'),
+    path('pengaturan/', views.pengaturan, name='pengaturan'),  
+    path('antrian/', views.antrian_pasien, name='antrian'),   
+    path('poli/', views.poli, name='poli'), 
+    path('petunjuk/', views.petunjuk, name='petunjuk'),   
  ] 

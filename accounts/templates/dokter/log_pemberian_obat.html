@@ -1,0 +1,39 @@
+{% extends 'dokter/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Log Pemberian Obat</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th width='5%'>No</th>
+              <th width='20%'>Tanggal</th>
+              <th width='30%'>Nama</th>
+              <th>Resep Obat</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>1</td>
+              <td>Kamis, 21/11/2019</td>
+              <td>Lenna</td>
+              <td>Paracetamol <a href="" style="float: right;">Detail</a> </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Kamis, 21/11/2019</td>
+              <td>Jacob</td>
+              <td>Panadol <a href="" style="float: right;">Detail</a> </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

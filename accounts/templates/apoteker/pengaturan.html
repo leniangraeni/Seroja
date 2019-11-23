@@ -1,0 +1,35 @@
+{% extends 'apoteker/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Pengaturan Akun</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+                <td width='25%'>Nama Lengkap</td>
+                <td>{{ user.first_name }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ user.email }}<a href="" style="float: right;">Ubah Email</a></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td> <a href="" style="float: right;">Ubah Password</a></td>
+            </tr>
+            </tbody>
+          </table>
+          <br>
+          <button type="submit">Simpan Perubahan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

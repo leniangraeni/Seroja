@@ -1,0 +1,44 @@
+{% extends 'apoteker/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Profil Anda</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+                <td width='25%'>Nama Lengkap</td>
+                <td>{{ user.first_name }}</td>
+            </tr>
+            <tr>
+                <td>Tempat, Tanggal Lahir</td>
+                <td>Banjarnegara, 13 Mei 1998</td>
+            </tr>
+            <tr>
+                <td>Jenis Kelamin</td>
+                <td>Perempuan</td>
+            </tr>
+            <tr>
+                <td>Nomor Pegawai</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>Surat Tugas</td>
+                <td><img src="{{ user.surat_tugas.url }}" style="width: 300px;"></td>
+            </tr>
+            </tbody>
+          </table>
+          <br>
+          <a href="{% url 'accounts:pengaturan' %}">Pengaturan Akun</a>
+          <button type="submit">Ubah Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
