@@ -26,7 +26,9 @@ SECRET_KEY = '!dezfacre5&ep+8^$w_-64(2ezfx*c6iv!69&o^cym(0#%i46x'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'accounts.User'
+
+# User Authentication
+AUTH_USER_MODEL = 'accounts.SerojaUser'
 
 # Application definition
 
@@ -82,7 +84,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -120,10 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media') 
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 
-LOGIN_URL = 'accounts/user_login'
+# Login
+LOGIN_URL = 'accounts/login'

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %} SEROJA {% endblock %}
+
+{% block content %}
+  <div class="card-body register-card-body">
+    <p class="login-box-msg">Daftar Akun</p>
+
+<<<<<<< HEAD:accounts/templates/signup.html
+    <div class="social-auth-links text-center">
+      <a href="{% url 'accounts:petugas_signup' %}" class="btn btn-block btn-primary">
+        Petugas Pendaftaran
+      </a>
+      <a href="{% url 'accounts:dokter_signup' %}" class="btn btn-block btn-primary">
+        Dokter
+      </a>
+      <a href="{% url 'accounts:apoteker_signup' %}" class="btn btn-block btn-primary">
+          Apoteker
+      </a>
+=======
+      <div class="social-auth-links text-center">
+        <a href="{% url 'accounts:akun_register' tipe='petugas' %}" class="btn btn-block btn-primary">
+          Petugas
+        </a>
+        <a href="{% url 'accounts:akun_register' tipe='dokter' %}" class="btn btn-block btn-primary">
+          Dokter
+        </a>
+        <a href="{% url 'accounts:akun_register' tipe='apoteker' %}" class="btn btn-block btn-primary">
+          Apoteker
+        </a>
+      </div>
+
+      <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+>>>>>>> 43e1ff24caf09a50950986b8b13a4b93fbea6ddc:accounts/templates/register.html
+    </div>
+
+<<<<<<< HEAD:accounts/templates/signup.html
+    <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+  </div>
+{% endblock %}
+=======
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>
+>>>>>>> 43e1ff24caf09a50950986b8b13a4b93fbea6ddc:accounts/templates/register.html

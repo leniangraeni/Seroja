@@ -1,0 +1,134 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Seroja | Registrasi {{ tipe|title }}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+
+  <body class="hold-transition register-page">
+    <div class="register-box">
+      <div class="register-logo">
+        <a href="#">
+          <b>Daftar
+          {% if tipe == 'petugas' %}
+            Petugas
+          {% elif tipe == 'dokter' %}
+            Dokter
+          {% elif tipe == 'apoteker' %}
+            Apoteker
+          {% endif %}
+          </b>
+      </div>
+    </div>
+    {% if registered %}
+      <h1>Registrasi Berhasil</h1>
+      <p>
+        Akun telah berhasil dibuat.
+      </p>
+      <a href="{% url 'accounts:login' %}">Kembali ke halaman Login</a>
+    {% else %}
+      {% if messages %}
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      {% endif %}
+      <div class="card">
+        <div class="card-body register-card-body">
+          <p class="login-box-msg">Register a new message</p>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text"  name="username" class="form-control" placeholder="Nomor Pegawai">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="password"  name="password" class="form-control">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text"  name="nama" class="form-control" placeholder="Nama">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text"  name="tempat_lahir" class="form-control" placeholder="Tempat Lahir">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group date mb-3" data-provide="datepicker" date-date-format="dd/mm/yyyy" placeholder="Tanggal Lahir">
+              <input type="date"  name="tanggal_lahir" class="form-control">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3" name="jenis_kelamin" class"form-control">
+              <!-- <input type="" name="jenis_kelamin" class="form-control"> -->
+              <!-- {{ akun_form.jenis_kelamin }} -->
+              <select class="form-control" name="jenis_kelamin">
+
+              </select>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text"  name="nomor_telepon" class="form-control" placeholder="Nomor Telepon">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3 ">
+              <input type="textbox"  name="alamat" class="form-control" placeholder="Alamat">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-edit"></span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="tipe" value="{{ tipe }}">
+            <button type="sumbit" class="btn btn-primary btn-block btn-flat">Register</button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+  </body>
+</html>
