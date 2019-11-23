@@ -108,7 +108,7 @@ def akun_login(request):
 
 def akun_logout(request):
     logout(request)
-    redirect('welcome')
+    return redirect('welcome')
 
 # Halaman home untuk pengguna yang sudah login
 ## Utilitas untuk mendapatkan informasi akun berdasarkan tipe
