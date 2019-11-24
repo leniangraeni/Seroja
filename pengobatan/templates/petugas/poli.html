@@ -11,22 +11,17 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
               <th width='30%'>Poli</th>
               <th>Penanggung Jawab</th>
             </tr>
             </thead>
             <tbody>
+            {% for p in poli %}
             <tr>
-              <td>1</td>
-              <td>Anak</td>
-              <td>dr. Leni <a href="" style="float: right;">Detail</a></td>
+              <td>{{ p.nama }}</td>
+              <td>{{ p.penanggung_jawab }} <a href="{% url 'pengobatan:detail_poli' nama_poli=p.nama %}">Detail</a></td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>Umum</td>
-              <td>dr. Angraeni <a href="" style="float: right;">Detail</a></td>
-            </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>

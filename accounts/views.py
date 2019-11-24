@@ -75,23 +75,6 @@ def akun_register(request, tipe):
                                                         'akun_form': akun_form,
                                                         'tipe': tipe,
                                                      })
-# Halaman untuk login akun
-# def user_login(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#
-#         user = authenticate(username=username, password=password)
-#         if user:
-#             login(request, user)
-#             return redirect('accounts:home')
-#             # return HttpResponse('Berhasil Login')
-#         else:
-#             print("login failed")
-#             print('Username: {} and password {}'.format(username, password))
-#
-#     else:
-#         return render(request, 'login.html')
 
 def akun_login(request):
     if request.method == "POST":
@@ -112,39 +95,6 @@ def akun_logout(request):
     logout(request)
     return redirect('welcome')
 
-# Halaman home untuk pengguna yang sudah login
-## Utilitas untuk mendapatkan informasi akun berdasarkan tipe
-def load_akun_by_tipe(user, tipe):
-    if tipe == 'petugas':
-        akun_data = PetugasInfo.objects.get(user=user)
-    elif tipe == 'dokter':
-        akun_data = DokterInfo.objects.get(user=user)
-    elif tipe == 'apoteker':
-        akun_data = ApotekerInfo.objects.get(user=user)
-    return akun_data
-
-## Halaman beranda/Home
-def home(request):
-    waktu = datetime.datetime.now()
-    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-    user = request.user
-    if user.is_authenticated:
-        akun = load_akun_by_tipe(user, user.tipe)
-        if user.tipe == 'petugas':
-            return render(request, 'petugas/home.html', context={
-                                                'waktu': waktu,
-                                                'user': akun,
-                                            })
-        if user.tipe == 'dokter':
-            return render(request, 'dokter/home.html', context={
-                                                'waktu': waktu,
-                                                'user': akun,
-                                            })
-        if user.tipe == 'apoteker':
-            return render(request, 'apoteker/home.html', context={
-                                                'waktu': waktu,
-                                                'user': akun,
-                                            })
 
 # Ini buat ngetest redirect nanti kalo mau dibagusin diapus aja ya
 def log_obat(request):
@@ -211,6 +161,6 @@ def petunjuk(request):
         akun = load_akun_by_tipe(user, user.tipe)
         if user.tipe == 'petugas':
             guides = Guideline.objects.all()
-            return render(request, 'petugas/petunjuk.html', 
+            return render(request, 'petugas/petunjuk.html',
                         {'guides' : guides,
                         'waktu': waktu, 'user': akun})

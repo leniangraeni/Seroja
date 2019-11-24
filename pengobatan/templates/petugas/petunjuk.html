@@ -10,9 +10,9 @@
         <div class="card-body">
         {% if guides %}
           {% for guideline in guides %}
-            <img src="{{ guideline.guide.url }}"> 
+            <img src="{{ guideline.guide.url }}">
             <br>
-            <a href="">Ubah</a>
+            <a href="{% url 'pengobatan:ubah_petunjuk' %}">Ubah</a>
             <a href="">Tambah</a>
           {% endfor %}
         {% else %}

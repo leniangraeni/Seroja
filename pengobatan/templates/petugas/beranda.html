@@ -11,14 +11,21 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
+              <!-- <th width='5%'>No</th> -->
               <th width='30%'>Nama</th>
               <th>Keluhan</th>
               <th>Poli</th>
             </tr>
             </thead>
             <tbody>
+              {% for b in berkas %}
               <tr>
+                <td>{{ b.nama }}</td>
+                <td>{{ b.keluhan }}</td>
+                <td>{{ b.poli }} <a href="{% url 'pengobatan:detail' antrian=b.pk %}"></a></td>
+              </tr>
+              {% endfor %}
+              <!-- <tr>
                 <td>1</td>
                 <td>Lenna</td>
                 <td>Sakit kepala, radang</td>
@@ -35,7 +42,7 @@
                 <td>Larry</td>
                 <td>Batuk</td>
                 <td>Penyakit Dalam <a href="" style="float: right;">Detail</a> </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

@@ -1,0 +1,86 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Antrian Pasien</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th width='25%'>Nama</th>
+              <th width='20%'>Jadwal</th>
+              <th width='20%'>Poli</th>
+              <th>Dokter</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pasien in antrian_pasien %}
+              <tr>
+                <td>{{ pasien.pasien }}</td>
+                <td>{{ pasien.tanggal_berkunjung }}</td>
+                <td>{{ pasien.poli }}</td>
+                <td>{{ pasien.dokter }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Pasien Selesai Berobat</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th width='25%'>Nama</th>
+              <th width='20%'>Jadwal</th>
+              <th width='20%'>Poli</th>
+              <th>Keterangan</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pasien in log_antrian %}
+              <tr>
+                <td>{{ pasien.pasien }}</td>
+                <td>{{ pasien.tanggal_berkunjung }}</td>
+                <td>{{ pasien.poli }}</td>
+                {% if pasien.sudah_verifikasi %}
+                  {% if pasien.sudah_berobat %}
+                    {% if pasien.sudah_ditangani %}
+                      <td>Sudah Selesai</td>
+                    {% elif pasien.ditolak %}
+                      <td>Resep ditolak</td>
+                    {% else %}
+                      <td>Menunggu obat</td>
+                    {% endif %}
+                  {% elif pasien.ditolak %}
+                    <td>Batal Berobat</td>
+                  {% else %}
+                    <td>Menunggu Dokter</td>
+                  {% endif %}
+                {% elif pasien.ditolak %}
+                  <td>Berkas ditolak</td>
+                {% else %}
+                  <td>Menunggu verifikasi</td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+            <tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
