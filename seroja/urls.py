@@ -20,8 +20,9 @@ urlpatterns = [
     path('', views.welcome, name="welcome"),
     path('guidelines/', include('guidelines.urls')),
     path('accounts/', include('accounts.urls')),
-    path('<tipe>/', include('pengobatan.urls'),
+    path('<tipe>/', include('pengobatan.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

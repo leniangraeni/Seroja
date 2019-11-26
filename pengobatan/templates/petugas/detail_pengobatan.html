@@ -19,6 +19,7 @@
             <td>Laki-laki</td>
           {% else %}
             <td>Perempuan</td>
+          {% endif %}
         </tr>
         <tr>
           <td>No. Rekam Medik</td>
@@ -26,7 +27,7 @@
         </tr>
         <tr>
           <td>No. Kartu BPJS</td>
-          <td>{{ berkas.pasien.bpjs }}</td>
+          <td><img src="{{ berkas.pasien.bpjs.url }}" alt="surat bpjs"></td>
         </tr>
         <tr>
           <td>Keluhan</td>
@@ -47,18 +48,15 @@
       </tbody>
     </table>
 
-    {% if check %}
-      {% if verifikasi %}
-        <h3>Berkas sudah diverifikasi</h3>
-      {% elif tolak %}
-        <h3>Berkas sudah ditolak</h3>
-      {% endif %}
+    {% if verifikasi %}
+      <h3>Berkas sudah diverifikasi</h3>
+    {% elif tolak %}
+      <h3>Berkas sudah ditolak</h3>
     {% else %}
-        <form method="post">\
-          <input type="submit" name="Verifikasi" verifikasi>
-        </form>
         <form method="post">
-          <input type="submit" name="Tolak" tolak>
+          {% csrf_token %}
+          {{ verifikasi_form.as_p }}
+          <input type="submit" value="Masukan">
         </form>
     {% endif %}
   </div>

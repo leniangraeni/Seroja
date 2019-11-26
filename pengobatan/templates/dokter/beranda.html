@@ -11,27 +11,25 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
               <th width='30%'>Nama</th>
               <th>Keluhan</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Lenna</td>
-              <td>Sakit kepala, radang <a href="" style="float: right;">Detail</a> </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Jacob</td>
-              <td>Pusing <a href="" style="float: right;">Detail</a> </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Larry</td>
-              <td>Batuk <a href="" style="float: right;">Detail</a> </td>
-            </tr>
+              {% for pasien in antrian_pasien%}
+                <tr>
+                  <td>{{ pasien.pasien }}</td>
+                  <td>{{ pasien.keluhan }}</td>
+                </tr>
+              {% endfor %}
+              {% for pasien in antrian_apotek %}
+                {% if pasien.ditolak %}
+                  <tr>
+                    <td>{{ pasien.pasien }}</td>
+                    <td>{{ pasien.pasien }} : Ditolak</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -49,17 +47,21 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
               <th width='30%'>Nama</th>
               <th>Keterangan</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Leo</td>
-              <td>Selesai</td>
-            </tr>
+            {% for resep in antrian_apotek %}
+              <tr>
+                <td>{{ resep.pasien }}</td>
+                {% if resep.sudah_berobat %}
+                  <td>Selesai</td>
+                {% elif resep.ditolak %}
+                  <td>Resep ditolak</td>
+                {% endif %}
+              </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>

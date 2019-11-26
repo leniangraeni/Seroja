@@ -1,29 +1,29 @@
 {% extends 'base_akun.html' %}
 
-{% block body-1 %} 
-    <a href="{% url 'accounts:home' %}" class="nav-link">
-        <i class="nav-icon fas fa-home"></i>  
+{% block body-1 %}
+    <a href="{% url 'pengobatan:beranda' tipe=request.user.tipe %}" class="nav-link">
+        <i class="nav-icon fas fa-home"></i>
         <p>Dashboard</p>
     </a>
 {% endblock %}
 
-{% block body-2 %} 
-    <a href="{% url 'accounts:log_obat' %}" class="nav-link">
-        <i class="nav-icon fas fa-clock"></i>  
+{% block body-2 %}
+    <a href="{% url 'pengobatan:log_obat' tipe=request.user.tipe %}" class="nav-link">
+        <i class="nav-icon fas fa-clock"></i>
         <p>Log Pemberian Obat</p>
     </a>
 {% endblock %}
 
-{% block body-3 %} 
+{% block body-3 %}
     <a href="#" class="nav-link">
-        <i class=""></i>  
+        <i class=""></i>
         <p></p>
     </a>
 {% endblock %}
 
-{% block body-4 %} 
+{% block body-4 %}
     <a href="#" class="nav-link">
-        <i class=""></i>  
+        <i class=""></i>
         <p></p>
     </a>
 {% endblock %}

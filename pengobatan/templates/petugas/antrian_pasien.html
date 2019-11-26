@@ -11,19 +11,23 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='25%'>Nama</th>
-              <th width='20%'>Jadwal</th>
-              <th width='20%'>Poli</th>
-              <th>Dokter</th>
+              <th width='15%'>Nama</th>
+              <th width='15%'>Jadwal</th>
+              <th width='15%'>Poli</th>
+              <th width='15%'>Tanggal</th>
+              <th width='15%'>Waktu</th>
+              <th width='15'>Dokter</th>
             </tr>
             </thead>
             <tbody>
             {% for pasien in antrian_pasien %}
               <tr>
                 <td>{{ pasien.pasien }}</td>
+                <td>{{ pasien.keluhan }}</td>
+                <td>{{ pasien.jadwal.poli }}</td>
                 <td>{{ pasien.tanggal_berkunjung }}</td>
-                <td>{{ pasien.poli }}</td>
-                <td>{{ pasien.dokter }}</td>
+                <td>{{ pasien.jadwal.waktu_mulai }} - {{ b.jadwal.waktu_selesai }}</td>
+                <td>{{ pasien.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
               </tr>
             {% endfor %}
             </tbody>
@@ -43,39 +47,47 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='25%'>Nama</th>
-              <th width='20%'>Jadwal</th>
-              <th width='20%'>Poli</th>
-              <th>Keterangan</th>
+              <th width='15%'>Nama</th>
+              <th width='15%'>Jadwal</th>
+              <th width='15%'>Poli</th>
+              <th width='15%'>Tanggal</th>
+              <th width='15%'>Waktu</th>
+              <th width='15%'>Dokter</th>
+              <th width='10%'>Keterangan</th>
             </tr>
             </thead>
             <tbody>
             {% for pasien in log_antrian %}
               <tr>
-                <td>{{ pasien.pasien }}</td>
-                <td>{{ pasien.tanggal_berkunjung }}</td>
-                <td>{{ pasien.poli }}</td>
-                {% if pasien.sudah_verifikasi %}
-                  {% if pasien.sudah_berobat %}
-                    {% if pasien.sudah_ditangani %}
-                      <td>Sudah Selesai</td>
+                <th>{{ pasien.pasien }}</th>
+                <th>{{ pasien.keluhan }}</th>
+                <th>{{ pasien.jadwal.poli }}</th>
+                <th>{{ pasien.tanggal_berkunjung }}</th>
+                <th>{{ pasien.jadwal.waktu_mulai }} - {{ pasien.jadwal.waktu_selesai }}</th>
+                <th>{{ pasien.dokter }}</th>
+                <td><a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">
+                  {% if pasien.sudah_verifikasi %}
+                    {% if pasien.sudah_berobat %}
+                      {% if pasien.sudah_ditangani %}
+                        Sudah Selesai
+                      {% elif pasien.ditolak %}
+                        Resep ditolak
+                      {% else %}
+                        Menunggu obat
+                      {% endif %}
                     {% elif pasien.ditolak %}
-                      <td>Resep ditolak</td>
+                      Batal Berobat
                     {% else %}
-                      <td>Menunggu obat</td>
+                      Menunggu Dokter
                     {% endif %}
                   {% elif pasien.ditolak %}
-                    <td>Batal Berobat</td>
+                    Berkas ditolak
                   {% else %}
-                    <td>Menunggu Dokter</td>
+                    Menunggu verifikasi
                   {% endif %}
-                {% elif pasien.ditolak %}
-                  <td>Berkas ditolak</td>
-                {% else %}
-                  <td>Menunggu verifikasi</td>
-                {% endif %}
-              </tr>
-            {% endfor %}
+                </a></td>
+                </tr>
+              {% endfor %}
             <tr>
             </tbody>
           </table>

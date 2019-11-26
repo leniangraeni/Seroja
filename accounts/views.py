@@ -1,3 +1,4 @@
+
 # Fungsi untuk mengirim dan menerima informasi dari template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
@@ -84,7 +85,7 @@ def akun_login(request):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            return redirect('accounts:home')
+            return redirect('pengobatan:beranda', tipe=user.tipe)
         else:
             messages.info(request, "Nomor Pegawai atau Password salah")
             return redirect('accounts:login')

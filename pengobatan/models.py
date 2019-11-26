@@ -20,9 +20,9 @@ class JadwalPraktekInfo(models.Model):
     poli   = models.ForeignKey(PoliInfo, on_delete=models.CASCADE)
 
     # Informasi tambahan
-    hari          = models.DateTiemField()
+    hari          = models.DateTimeField()
     waktu_mulai   = models.DateTimeField()
-    waktu_selesai = modesl.DateTimeField()
+    waktu_selesai = models.DateTimeField()
 
     def __str__(self):
         return "{}, {}".format(self.dokter, self.poli)
@@ -39,24 +39,24 @@ class ObatInfo(models.Model):
 class PengobatanInfo(models.Model):
     # Referensi dari model lain (one-to-many)
     pasien   = models.ForeignKey(PasienInfo, on_delete=models.CASCADE)
-    petugas  = models.ForeignKey(PetugasInfo, on_delete=models.CASCADE, blank=True)
-    dokter   = models.ForeignKey(DokterInfo, on_delete=models.CASCADE, blank=True)
-    apoteker = models.ForeignKey(ApotekerInfo, on_delete=models.CASCADE, blank=True)
-    obat     = models.ForeignKey(ObatInfo, on_delete=models.CASCADE, blank=True)
-    jadwal   = models.ForeignKey(JadwalPraktekInfo, on_delete=models.CASCADE, blank=True)
+    petugas  = models.ForeignKey(PetugasInfo, on_delete=models.CASCADE, blank=True, null=True)
+    dokter   = models.ForeignKey(DokterInfo, on_delete=models.CASCADE, blank=True, null=True)
+    apoteker = models.ForeignKey(ApotekerInfo, on_delete=models.CASCADE, blank=True, null=True)
+    obat     = models.ForeignKey(ObatInfo, on_delete=models.CASCADE, blank=True, null=True)
+    jadwal   = models.ForeignKey(JadwalPraktekInfo, on_delete=models.CASCADE)
 
     # Kondisi pengobatan pasien
     sudah_verifikasi = models.BooleanField(default=False)
     sudah_ditangani  = models.BooleanField(default=False)
     sudah_berobat    = models.BooleanField(default=False)
-    ditolak          = models.BooleanField(deafult=False)
+    ditolak          = models.BooleanField(default=False)
     pesan_penolakan  = models.CharField(max_length=200, blank=True)
 
     # Informasi tambahan
-    tanggal_berkunjung = models.DateTiemField()
-    keluhan            = models.CharField(max_length=200, blank=True)
-    rujukan            = models.ImageField(upload_to='/rujukan/', blank=True)
-    dosis              = models.PositiveIntegerField(blank=True)
+    tanggal_berkunjung = models.DateTimeField()
+    keluhan            = models.CharField(max_length=200)
+    rujukan            = models.ImageField(upload_to='rujukan/', blank=True)
+    dosis              = models.PositiveIntegerField(default=0)
     aturan             = models.CharField(max_length=200, blank=True)
     catatan            = models.CharField(max_length=200, blank=True)
 

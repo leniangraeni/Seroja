@@ -23,7 +23,7 @@
               <td>{{ jp.hari }}</td>
               <td>{{ jp.waktu_mulai }}</td>
               <td>{{ jp.waktu_selesai}}</td>
-              <td>{{ jp.dokter }}  <a href="{% url 'pengobatan:detail_jadwal' jadwal=jp.pk %}">Ubah</a></td>
+              <td>{{ jp.dokter }}  <a href="{% url 'pengobatan:ubah_jadwal' tipe=request.user.tipe nama_poli=jp.poli.nama jadwal=jp.pk  %}">Ubah</a></td>
             </tr>
             {% endfor %}
             </tbody>

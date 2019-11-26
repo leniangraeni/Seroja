@@ -12,37 +12,25 @@
             <thead>
             <tr>
               <!-- <th width='5%'>No</th> -->
-              <th width='30%'>Nama</th>
+              <th width='20%'>Nama</th>
               <th>Keluhan</th>
               <th>Poli</th>
+              <th>Tamggal Berkunjung</th>
+              <th>Waktu</th>
+              <th>Dokter</th>
             </tr>
             </thead>
             <tbody>
               {% for b in berkas %}
               <tr>
-                <td>{{ b.nama }}</td>
+                <td>{{ b.pasien }}</td>
                 <td>{{ b.keluhan }}</td>
-                <td>{{ b.poli }} <a href="{% url 'pengobatan:detail' antrian=b.pk %}"></a></td>
+                <td>{{ b.jadwal.poli }}</td>
+                <td>{{ b.tanggal_berkunjung }}</td>
+                <td>{{ b.jadwal.waktu_mulai }} - {{ b.jadwal.waktu_selesai }}</td>
+                <td>{{ b.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=b.pk %}">Detail</a></td>
               </tr>
               {% endfor %}
-              <!-- <tr>
-                <td>1</td>
-                <td>Lenna</td>
-                <td>Sakit kepala, radang</td>
-                <td>Anak <a href="" style="float: right;">Detail</a> </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>Pusing</td>
-                <td>Umum <a href="" style="float: right;">Detail</a> </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Larry</td>
-                <td>Batuk</td>
-                <td>Penyakit Dalam <a href="" style="float: right;">Detail</a> </td>
-              </tr> -->
             </tbody>
           </table>
         </div>

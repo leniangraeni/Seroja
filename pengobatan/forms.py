@@ -4,8 +4,8 @@ from pengobatan.models import JadwalPraktekInfo
 from guidelines.models import Guideline
 
 class VerifikasiForm(forms.Form):
-    verifikasi = forms.BooleanField()
-    tolak      = forms.BooleanField()
+    verifikasi = forms.CharField()
+    tolak      = forms.CharField()
 
 class JadwalForm(forms.ModelForm):
     class Meta():

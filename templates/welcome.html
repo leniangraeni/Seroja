@@ -14,12 +14,12 @@
     <h1> Welcome </h1>
     <hr>
     <h2> Halo, {{ user.username }}</h2>
-    
+
     <a href="{% url 'guideline:display' %}">Guidelines</a>
 
     {% if user.is_authenticated %}
-        <a href="{% url 'accounts:logout' %}">Logout</a> 
-        <a href="{% url 'accounts:home' %}">Home</a>
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+        <a href="{% url 'pengobatan:beranda' tipe=request.user.tipe %}">Home</a>
     {% else %}
         <a href="{% url 'accounts:login' %}">Login</a>
         <a href="{% url 'accounts:register' %}">Daftar</a>
@@ -27,4 +27,3 @@
     {% block content %} {% endblock %}
 </body>
 </html>
-

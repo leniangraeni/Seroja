@@ -7,24 +7,34 @@
         <div class="card-header">
           <h3 class="card-title"><b>Poli di Rumah Sakit</b></h3>
         </div>
-        <div class="card-body">
-          <table id="example2" class="table table-bordered table-hover">
-            <thead>
-            <tr>
-              <th width='30%'>Poli</th>
-              <th>Penanggung Jawab</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for p in poli %}
-            <tr>
-              <td>{{ p.nama }}</td>
-              <td>{{ p.penanggung_jawab }} <a href="{% url 'pengobatan:detail_poli' nama_poli=p.nama %}">Detail</a></td>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
+
+        {% for p in poli %}
+          <div class="card-body">
+            <h4>Poli : {{ p.nama }}</h4>
+            <h4>Penanggung Jawab : {{ p.penanggung_jawab }}</h4>
+
+            <table id="example2" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th width='10%'>Hari</th>
+                  <th width='15%'>Mulai</th>
+                  <th width='15%'>Selesai</th>
+                  <th>Dokter</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for j in p.jadwalpraktekinfo_set.all %}
+                  <tr>
+                    <td>{{ j.hari }}</td>
+                    <td>{{ j.waktu_mulai }}</td>
+                    <td>{{ j.waktu_selesai }}</td>
+                    <td>{{ j.dokter }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </div>
