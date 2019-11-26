@@ -1,0 +1,98 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Antrian Pasien</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th width='15%'>Nama</th>
+              <th width='15%'>Jadwal</th>
+              <th width='15%'>Poli</th>
+              <th width='15%'>Tanggal</th>
+              <th width='15%'>Waktu</th>
+              <th width='15'>Dokter</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pasien in antrian_pasien %}
+              <tr>
+                <td>{{ pasien.pasien }}</td>
+                <td>{{ pasien.keluhan }}</td>
+                <td>{{ pasien.jadwal.poli }}</td>
+                <td>{{ pasien.tanggal_berkunjung }}</td>
+                <td>{{ pasien.jadwal.waktu_mulai }} - {{ b.jadwal.waktu_selesai }}</td>
+                <td>{{ pasien.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Pasien Selesai Berobat</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th width='15%'>Nama</th>
+              <th width='15%'>Jadwal</th>
+              <th width='15%'>Poli</th>
+              <th width='15%'>Tanggal</th>
+              <th width='15%'>Waktu</th>
+              <th width='15%'>Dokter</th>
+              <th width='10%'>Keterangan</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pasien in log_antrian %}
+              <tr>
+                <th>{{ pasien.pasien }}</th>
+                <th>{{ pasien.keluhan }}</th>
+                <th>{{ pasien.jadwal.poli }}</th>
+                <th>{{ pasien.tanggal_berkunjung }}</th>
+                <th>{{ pasien.jadwal.waktu_mulai }} - {{ pasien.jadwal.waktu_selesai }}</th>
+                <th>{{ pasien.dokter }}</th>
+                <td><a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">
+                  {% if pasien.sudah_verifikasi %}
+                    {% if pasien.sudah_berobat %}
+                      {% if pasien.sudah_ditangani %}
+                        Sudah Selesai
+                      {% elif pasien.ditolak %}
+                        Resep ditolak
+                      {% else %}
+                        Menunggu obat
+                      {% endif %}
+                    {% elif pasien.ditolak %}
+                      Batal Berobat
+                    {% else %}
+                      Menunggu Dokter
+                    {% endif %}
+                  {% elif pasien.ditolak %}
+                    Berkas ditolak
+                  {% else %}
+                    Menunggu verifikasi
+                  {% endif %}
+                </a></td>
+                </tr>
+              {% endfor %}
+            <tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

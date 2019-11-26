@@ -62,7 +62,7 @@
         {% endif %}
         </div>
         <div class="info">
-          <a href="{% url 'accounts:profil' %}" class="d-block">{{ user.nama }}</a>
+          <a href="{% url 'pengobatan:profil' tipe=request.user.tipe %}" class="d-block">{{ user.nama }}</a>
         {% if request.user.tipe == 'petugas' %}
             <font color="white">Petugas</font>
         {% elif request.user.tipe == 'dokter' %}

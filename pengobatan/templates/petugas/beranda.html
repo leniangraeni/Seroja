@@ -1,0 +1,40 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Pendaftaran Pasien</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <!-- <th width='5%'>No</th> -->
+              <th width='20%'>Nama</th>
+              <th>Keluhan</th>
+              <th>Poli</th>
+              <th>Tamggal Berkunjung</th>
+              <th>Waktu</th>
+              <th>Dokter</th>
+            </tr>
+            </thead>
+            <tbody>
+              {% for b in berkas %}
+              <tr>
+                <td>{{ b.pasien }}</td>
+                <td>{{ b.keluhan }}</td>
+                <td>{{ b.jadwal.poli }}</td>
+                <td>{{ b.tanggal_berkunjung }}</td>
+                <td>{{ b.jadwal.waktu_mulai }} - {{ b.jadwal.waktu_selesai }}</td>
+                <td>{{ b.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=b.pk %}">Detail</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

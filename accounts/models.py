@@ -43,10 +43,10 @@ class Akun(models.Model):
 # Model untuk Pasien (turunan Akun)
 class PasienInfo(Akun):
     # Informasi data diri khusus Pasien
-    nomor_bpjs = models.CharField(max_length=13, blank=True)
-    bpjs       = models.ImageField(upload_to='akun/media/pasien/bpjs', blank=True)
-    rujukan    = models.ImageField(upload_to='akun/media/pasien/rujukan', blank=True)
-    profil     = models.ImageField(upload_to='akun/media/pasien/profil', blank=True)
+    nomor_bpjs  = models.CharField(max_length=13, blank=True)
+    bpjs        = models.ImageField(upload_to='akun/media/pasien/bpjs', blank=True)
+    rekam_medik = models.CharField(max_length=13, blank=True)
+    profil      = models.ImageField(upload_to='akun/media/pasien/profil', blank=True)
 
     # Meta untuk Pasien
     class Meta():

@@ -1,0 +1,19 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Jadwal Praktek Poli {{ jadwal.poli }}</b></h3>
+        </div>
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            {{ jadwal_form.as_table }}
+            <input type="submit" value="Ubah">
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

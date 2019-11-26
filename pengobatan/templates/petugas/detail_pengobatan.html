@@ -1,0 +1,63 @@
+{% extends 'petugas/sidebar.html' %}
+
+  {% block content %}
+  <div class="container">
+    <h1>Detail Berkas</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td>Nama</td>
+          <td>{{ berkas.nama }}</td>
+        </tr>
+        <tr>
+          <td>Usia</td>
+          <td>{{ berkas.pasien.tanggal_lahir }}</td>
+        </tr>
+        <tr>
+          <td>Jenis Kelamin</td>
+          {% if berkas.pasien.jenis_kelamin == 'L' %}
+            <td>Laki-laki</td>
+          {% else %}
+            <td>Perempuan</td>
+          {% endif %}
+        </tr>
+        <tr>
+          <td>No. Rekam Medik</td>
+          <td>{{ berkas.pasien.rekam_medik }}</td>
+        </tr>
+        <tr>
+          <td>No. Kartu BPJS</td>
+          <td><img src="{{ berkas.pasien.bpjs.url }}" alt="surat bpjs"></td>
+        </tr>
+        <tr>
+          <td>Keluhan</td>
+          <td>{{ berkas.keluhan }}</td>
+        </tr>
+        <tr>
+          <td>Poli</td>
+          <td>{{ berkas.poli }}</td>
+        </tr>
+        <tr>
+          <td>Dokter</td>
+          <td>{{ berkas.dokter }}</td>
+        </tr>
+        <tr>
+          <td>Jadwal Berobat</td>
+          <td>{{ berkas.tanggal_berkunjung }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% if verifikasi %}
+      <h3>Berkas sudah diverifikasi</h3>
+    {% elif tolak %}
+      <h3>Berkas sudah ditolak</h3>
+    {% else %}
+        <form method="post">
+          {% csrf_token %}
+          {{ verifikasi_form.as_p }}
+          <input type="submit" value="Masukan">
+        </form>
+    {% endif %}
+  </div>
+  {% endblock %}
