@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %} SEROJA {% endblock %}
-
 {% block content %}
-  <div class="card-body register-card-body">
-    <p class="login-box-msg">Daftar Akun</p>
+<div class="register-box">
+  <h1 style="text-align: center;">SEROJA</h1>
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">Daftar Akun</p>
 
-      <div class="social-auth-links text-center">
-        <a href="{% url 'accounts:akun_register' tipe='petugas' %}" class="btn btn-block btn-primary">
-          Petugas
-        </a>
-        <a href="{% url 'accounts:akun_register' tipe='dokter' %}" class="btn btn-block btn-primary">
-          Dokter
-        </a>
-        <a href="{% url 'accounts:akun_register' tipe='apoteker' %}" class="btn btn-block btn-primary">
-          Apoteker
-        </a>
-      </div>
+        <div class="social-auth-links text-center">
+          <a href="{% url 'accounts:akun_register' tipe='petugas' %}" class="btn btn-block btn-primary">
+            Petugas
+          </a>
+          <a href="{% url 'accounts:akun_register' tipe='dokter' %}" class="btn btn-block btn-primary">
+            Dokter
+          </a>
+          <a href="{% url 'accounts:akun_register' tipe='apoteker' %}" class="btn btn-block btn-primary">
+            Apoteker
+          </a>
+        </div>
+    </div>
+    <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+  </div>
 
-      <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
+      
     </div>
 {% endblock %}

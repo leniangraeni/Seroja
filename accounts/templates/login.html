@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %} Akun SEROJA {% endblock %}
 
 {% block content %}
+<div class="col-md-3">
     <div class="card-body login-card-body" style="box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">
       <p class="login-box-msg">Masuk untuk memulai sesi</p>
 
@@ -45,5 +45,6 @@
       </p>
       <p>Belum memiliki akun? <a href="{% url 'accounts:register' %}">Daftar Akun</a> </p>
     </div>
+</div>
     <!-- /.login-card-body -->
 {% endblock %}
