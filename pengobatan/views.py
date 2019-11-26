@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # Memasukan model dan form
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 from pengobatan.models import PoliInfo, JadwalPraktekInfo, ObatInfo, PengobatanInfo
 from guidelines.models import Guideline
-from pengobatan.forms import VerifikasiForm, JadwalForm
+from pengobatan.forms import VerifikasiForm, JadwalForm, UbahProfilForm
 
 # Fungsi utilitas
 from datetime import datetime, timedelta, time
@@ -27,7 +28,73 @@ def load_akun_by_tipe(user, tipe):
         akun_data = ApotekerInfo.objects.get(user=user)
     return akun_data
 
+## Fungsi utilitas untuk menyimpan informasi dengan form biasa
+def profil_to_model(akunModel, akunForm, modelTemplate):
+    akunModel.nama = akunForm.cleaned_data['nama']
+    akunModel.tempat_lahir = akunForm.cleaned_data['tempat_lahir']
+    akunModel.tanggal_lahir = akunForm.cleaned_data['tanggal_lahir']
+    akunModel.jenis_kelamin = akunForm.cleaned_data['jenis_kelamin']
+    akunModel.nomor_telepon = akunForm.cleaned_data['nomor_telepon']
+    akunModel.alamat = akunForm.cleaned_data['alamat']
+
+    return akunModel
+
 # Create your views here.
+
+# Halaman profil pengguna
+# Informasi pengguna
+def profil(request, tipe):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        if request.user.tipe == 'petugas' and tipe == 'petugas':
+            return render(request, 'petugas/profil.html', context={
+                                                            'waktu': waktu,
+                                                            'user': akun,
+                                                            })
+        if request.user.tipe == 'dokter' and tipe == 'dokter':
+            return render(request, 'dokter/profil.html', {'waktu': waktu, 'user': akun})
+        if request.user.tipe == 'apoteker' and tipe == 'apoteker':
+            return render(request, 'apoteker/profil.html', {'waktu': waktu, 'user': akun})
+        else:
+            return redirect('welcome')
+
+# Mengubah informasi profil
+def ubah_profil(request, tipe):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        berubah = False
+        if request.method == "POST":
+            profil_form = UbahProfilForm(data=request.POST)
+            if profil_form.is_valid():
+                if request.user.tipe == 'petugas' and tipe == 'petugas':
+                    profil_data = PetugasInfo.objects.get(user=request.user)
+                    profil_data = profil_to_model(profil_data, profil_form, PetugasInfo)
+                elif request.user.tipe == 'dokter' and tipe == 'dokter':
+                    profil_data = DokterInfo.objects.get(user=request.user)
+                    profil_data = profil_to_model(profil_data, profil_form, DokterInfo)
+                elif request.user.tipe == 'apoteker' and tipe == 'apoteker':
+                    profil_data = ApotekerInfo.objects.get(user=request.user)
+                    profil_data = profil_to_model(profil_data, profil_form, ApotekerInfo)
+                profil_data.save()
+                berubah = True
+            else:
+                messages.info(request, "Perubahan gagal dilakukan")
+                return redirect("pengobatan:ubah_profil", tipe=tipe)
+        else:
+            profil_form = UbahProfilForm()
+        return render(request, 'petugas/ubah_profil.html', context={
+                                                            'berubah': berubah,
+                                                            'profil_form': profil_form,
+                                                            })
+    else:
+        return redirect('welcome')
+
 # Halaman beranda untuk pengguna yang sudah login
 def beranda(request, tipe):
     waktu = datetime.now()
@@ -244,19 +311,6 @@ def log_obat(request):
             return render(request, 'dokter/log_pemberian_obat.html', {'waktu': waktu, 'user': akun})
         if user.tipe == 'apoteker':
             return render(request, 'apoteker/log_obat_keluar.html', {'waktu': waktu, 'user': akun})
-
-def profil(request):
-    waktu = datetime.now()
-    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-    user = request.user
-    if user.is_authenticated:
-        akun = load_akun_by_tipe(user, user.tipe)
-        if user.tipe == 'petugas':
-            return render(request, 'petugas/profil.html', {'waktu': waktu, 'user': akun})
-        if user.tipe == 'dokter':
-            return render(request, 'dokter/profil.html', {'waktu': waktu, 'user': akun})
-        if user.tipe == 'apoteker':
-            return render(request, 'apoteker/profil.html', {'waktu': waktu, 'user': akun})
 
 def pengaturan(request):
     waktu = datetime.now()

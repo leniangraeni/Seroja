@@ -58,7 +58,6 @@ class PasienInfo(Akun):
 # Model untuk Petugas (turunan Akun)
 class PetugasInfo(Akun):
     # Informasi data diri khusus Petugas
-    nomor_pegawai  = models.CharField(max_length=13, blank=True)
     surat_tugas    = models.ImageField(upload_to='akun/media/petugas/surat_tugas', blank=True)
     profil         = models.ImageField(upload_to='akun/media/petugas/profil', blank=True)
 
@@ -72,7 +71,6 @@ class PetugasInfo(Akun):
 # Model untuk Dokter (turunan Akun)
 class DokterInfo(Akun):
     # Informasi data diri khusus Dokter
-    nomor_pegawai  = models.CharField(max_length=13, blank=True)
     surat_tugas    = models.ImageField(upload_to='akun/media/dokter/surat_tugas', blank=True)
     profil         = models.ImageField(upload_to='akun/media/dokter/profil', blank=True)
     # poli        = models.ForeignKey(Poli, on_delete=models.CASCADE)
@@ -87,7 +85,6 @@ class DokterInfo(Akun):
 # Model untuk Apoteker (turunan Akun)
 class ApotekerInfo(Akun):
     # Informasi data diri khusus Apoteker
-    nomor_pegawai  = models.CharField(max_length=13, blank=True)
     surat_tugas    = models.ImageField(upload_to='akun/media/apoteker/surat_tugas', blank=True)
     profil         = models.ImageField(upload_to='akun/media/apoteker/profil', blank=True)
 

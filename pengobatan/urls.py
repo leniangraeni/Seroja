@@ -19,6 +19,7 @@ urlpatterns = [
     path('poli/<nama_poli>/', views.jadwal_poli, name='jadwal_poli'),
     path('poli/<nama_poli>/<jadwal>', views.ubah_jadwal, name='ubah_jadwal'),
     path('profil/', views.profil, name='profil'),
+    path('profil/ubah/', views.ubah_profil, name='ubah_profil'),
     path('petunjuk/', views.petunjuk, name='petunjuk'),
     # path('petunjuk/ubah/', views.petunjuk_ubah, name='ubah_petunjuk'),
     path('log_obat/', views.log_obat, name='log_obat'),

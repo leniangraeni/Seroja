@@ -41,8 +41,7 @@
             </tbody>
           </table>
           <br>
-          <a href="{% url 'accounts:pengaturan' %}">Pengaturan Akun</a>
-          <button type="submit">Ubah Data</button>
+          <a href="{% url 'pengobatan:ubah_profil' tipe=request.user.tipe %}">Ubah</a>
         </div>
       </div>
     </div>
