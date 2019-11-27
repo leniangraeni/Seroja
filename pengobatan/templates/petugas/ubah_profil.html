@@ -1,0 +1,26 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><b>Profil Anda</b></h3>
+        </div>
+        <div class="card-body">
+          {% if berubah %}
+            <h1>Berhasil diubah gan, coba aja cek</h1>
+            <a href="{url 'pengobatan:profil' tipe=request.user.tipe }">Balik ke profil</a>
+          {% else %}
+            <h1>Ubah profilnya gan</h1>
+            <form method="post">
+              {% csrf_token %}
+              {{ profil_form.as_p }}
+              <input type="submit" value="Ubah Data">
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
