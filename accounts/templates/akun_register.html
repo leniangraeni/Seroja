@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="col-md-7">
+<div class="col-md-7  ">
   {% if registered %}
-    <h1>Registrasi Berhasil</h1>
-    <p>
-      Akun telah berhasil dibuat.
-    </p>
-    <a href="{% url 'accounts:login' %}">Kembali ke halaman Login</a>
+  <div class="card card-info">
+    <div class="card-header">
+      Registrasi Berhasil
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        Akun Anda Berhasil dibuat. Silakan klik &nbsp;<a href="{% url 'accounts:login' %}"> Login </a> &nbsp; untuk masuk akun
+      </div>
+    </div>
+  </div>
   {% else %}
     {% if messages %}
       {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
     {% endif %}
-    <h1 style="text-align: center;">SEROJA</h1>
-  <!-- general form elements -->
-   
-  <!-- /.card -->
-  <!-- Horizontal Form -->
   <div class="card card-primary">
     <div class="card-header">
       {% if tipe == 'petugas' %}
@@ -29,9 +29,9 @@
         <h3 class="card-title">Daftar Akun Apoteker</h3>
       {% endif %}
     </div>
-    <!-- /.card-header -->
-    <!-- form start -->
-    <form class="form-horizontal">
+
+    <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+      {% csrf_token %}
       <div class="card-body">
         <div class="form-group row">
           <label for="username" class="col-sm-2 col-form-label">Nomor Pegawai</label>
@@ -86,15 +86,15 @@
         </div>
       </div>
       <input type="hidden" name="tipe" value="{{ tipe }}">
-      
-      <!-- /.card-body -->
-      <div class="card-footer">
-        <button type="sumbit" class="btn btn-primary btn-block btn-flat">Register</button>
-      </div>
-      <!-- /.card-footer -->
-    </form>
 
-  <!-- /.card -->
+      <div class="card-footer">
+        <button type="sumbit" class="btn btn-primary btn-block btn-flat" style="border-radius:20pt; box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">Register</button>
+        <br>
+        <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p> 
+      </div>
+      
+    </form>
     {% endif %}
+    
 </div>
 {% endblock %}

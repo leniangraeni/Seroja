@@ -22,5 +22,6 @@ urlpatterns = [
     path('petunjuk/', views.petunjuk, name='petunjuk'),
     # path('petunjuk/ubah/', views.petunjuk_ubah, name='ubah_petunjuk'),
     path('log_obat/', views.log_obat, name='log_obat'),
+    path('pendaftaran/', views.pendaftaran, name='pendaftaran'),
     # path('pengaturan/', views.pengaturan, name='pengaturan'),
 ]

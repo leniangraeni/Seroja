@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 # Memasukan model dan form
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 from pengobatan.models import PoliInfo, JadwalPraktekInfo, ObatInfo, PengobatanInfo
 from guidelines.models import Guideline
-from pengobatan.forms import VerifikasiForm, JadwalForm
+from pengobatan.forms import VerifikasiForm, JadwalForm, PengobatanForm
 
 # Fungsi utilitas
 from datetime import datetime, timedelta, time
@@ -270,3 +271,31 @@ def pengaturan(request):
             return render(request, 'dokter/pengaturan.html', {'waktu': waktu, 'user': akun})
         if user.tipe == 'apoteker':
             return render(request, 'apoteker/pengaturan.html', {'waktu': waktu, 'user': akun})
+
+def pendaftaran(request, tipe):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        if akun is None:
+            return redirect('welcome')
+
+        if request.user.tipe == 'petugas' and tipe == 'petugas':
+            if request.method == "POST":
+                daftar = PengobatanForm(data=request.POST)
+
+                if daftar.is_valid():
+                    daftar.save()
+                    return HttpResponse('successfuly uploaded')
+                else:
+                    return HttpResponse("Ada kesalahan")
+            else:
+                daftar = PengobatanForm()
+            return render(request, 'petugas/pendaftaran.html', context={
+                                                                        'daftar': daftar
+                                                                    })
+        else:
+            return redirect('pengobatan:beranda', tipe=request.user.tipe)
+    else:
+        return redirect('welcome')
