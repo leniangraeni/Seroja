@@ -11,25 +11,19 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
-              <th width='20%'>Tanggal</th>
               <th width='30%'>Nama</th>
+              <th>Tanggal Berkunjung</th>
               <th>Resep Obat</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Kamis, 21/11/2019</td>
-              <td>Lenna</td>
-              <td>Paracetamol <a href="" style="float: right;">Detail</a> </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Kamis, 21/11/2019</td>
-              <td>Jacob</td>
-              <td>Panadol <a href="" style="float: right;">Detail</a> </td>
-            </tr>
+              {% for pasien in pasien_berobat %}
+                <tr>
+                  <td>{{ pasien.pasien }}</td>
+                  <td>{{ pasien.tanggal_berkunjung }}</td>
+                  <td>{{ pasien.obat }}, {{ pasien.dosis }} </td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

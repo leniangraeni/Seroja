@@ -34,10 +34,22 @@
               <tbody>
               {% for j in p.jadwalpraktekinfo_set.all %}
                 <tr>
-                  <td>{{ j.hari }}</td>
+                  {% if j.hari  == '1' %}
+                    <td>Senin</td>
+                  {% elif j.hari == '2' %}
+                    <td>Selasa</td>
+                  {% elif j.hari == '3' %}
+                    <td>Rabu</td>
+                  {% elif j.hari == '4' %}
+                    <td>Kamis</td>
+                  {% elif j.hari == '5' %}
+                    <td>Jumat</td>
+                  {% elif j.hari == '6' %}
+                    <td>Sabtu</td>
+                  {% endif %}
                   <td>{{ j.waktu_mulai }}</td>
                   <td>{{ j.waktu_selesai }}</td>
-                  <td>{{ j.dokter }} <a href="" style="float: right;">Ubah</a></td>
+                  <td>{{ j.dokter }} <a href="{% url 'pengobatan:ubah_jadwal' tipe=request.user.tipe nama_poli=p.nama jadwal=j.pk %}" style="float: right;">Ubah</a></td>
                 </tr>
               {% endfor %}
               </tbody>

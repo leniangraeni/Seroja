@@ -15,7 +15,46 @@
             <h1>Ubah profilnya gan</h1>
             <form method="post">
               {% csrf_token %}
-              {{ profil_form.as_p }}
+              <table id="example2" class="table table-bordered table-hover">
+                  <thead>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td width='25%'>Nama Lengkap</td>
+                      <td><input type="text" value="{{ user.nama }}" name="nama" class="form-control"></td>
+                  </tr>
+                  <tr>
+                      <td>Tempat Lahir</td>
+                      <td><input type="text" value="{{ user.tempat_lahir }}" name="tempat_lahir" class="form-control"></td>
+                  </tr>
+                  <tr>
+                      <td>Tanggal Lahir</td>
+                      <td><input type="date" value="{{ user.tanggal_lahir }}" name="tanggal_lahir" class="form-control"></td>
+                  </tr>
+                  <tr>
+                      <td>Jenis Kelamin</td>
+                      <td>
+                          <!-- {% if user.jenis_kelamin == 'P' %}
+                            <td>Perempuan</td>
+                          {% elif user.jenis_kelamin == 'L' %}
+                            <td>Laki-laki</td>
+                          {% endif %} -->
+                        <select class="form-control" value="{{ user.jenis_kelamin }}" name="jenis_kelamin">
+                          <option value="L">Laki-laki</option>
+                          <option value="P">Perempuan</option>
+                        </select>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>Nomor Telepon</td>
+                      <td><input type="text" value="{{ user.nomor_telepon }}" name="nomor_telepon" class="form-control"></td>
+                  </tr>
+                  <tr>
+                      <td>Alamat</td>
+                      <td><input type="text" value="{{ user.alamat }}" name="alamat" class="form-control"></td>
+                  </tr>
+                  </tbody>
+                </table>
               <input type="submit" value="Ubah Data">
             </form>
           {% endif %}

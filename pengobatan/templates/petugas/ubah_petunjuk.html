@@ -1,0 +1,9 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+    <form method = "post" enctype="multipart/form-data"> 
+        {% csrf_token %} 
+        {{ petunjuk_form.as_p }} 
+        <button type="submit">Simpan Perubahan</button> 
+    </form> 
+{% endblock %}

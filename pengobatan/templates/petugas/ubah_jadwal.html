@@ -8,10 +8,12 @@
           <h3 class="card-title"><b>Jadwal Praktek Poli {{ jadwal.poli }}</b></h3>
         </div>
         <div class="card-body">
+          <form action="post">
           <table id="example2" class="table table-bordered table-hover">
-            {{ jadwal_form.as_table }}
+            {{ jadwal_form.as_p }}
             <input type="submit" value="Ubah">
           </table>
+         </form>
         </div>
       </div>
     </div>
