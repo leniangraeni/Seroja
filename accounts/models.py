@@ -44,9 +44,9 @@ class Akun(models.Model):
 class PasienInfo(Akun):
     # Informasi data diri khusus Pasien
     nomor_bpjs  = models.CharField(max_length=13, blank=True)
-    bpjs        = models.CharField(max_length=200, blank=True)
+    bpjs        = models.ImageField(upload_to='akun/media/pasien/bpjs', blank=True)
     rekam_medik = models.CharField(max_length=13, blank=True)
-    profil      = models.CharField(max_length=200, blank=True)
+    profil      = models.ImageField(upload_to='akun/media/pasien/profil', blank=True)
 
     # Meta untuk Pasien
     class Meta():
@@ -58,8 +58,8 @@ class PasienInfo(Akun):
 # Model untuk Petugas (turunan Akun)
 class PetugasInfo(Akun):
     # Informasi data diri khusus Petugas
-    surat_tugas    = models.CharField(max_length=200, blank=True)
-    profil         = models.CharField(max_length=200, blank=True)
+    surat_tugas    = models.ImageField(upload_to='akun/media/petugas/surat_tugas', blank=True)
+    profil         = models.ImageField(upload_to='akun/media/petugas/profil', blank=True)
 
     # Meta untuk Petugas
     class Meta():
@@ -71,8 +71,8 @@ class PetugasInfo(Akun):
 # Model untuk Dokter (turunan Akun)
 class DokterInfo(Akun):
     # Informasi data diri khusus Dokter
-    surat_tugas    = models.CharField(max_length=200, blank=True)
-    profil         = models.CharField(max_length=200, blank=True)
+    surat_tugas    = models.ImageField(upload_to='akun/media/dokter/surat_tugas', blank=True)
+    profil         = models.ImageField(upload_to='akun/media/dokter/profil', blank=True)
     # poli        = models.ForeignKey(Poli, on_delete=models.CASCADE)
 
     # Meta untuk Dokter
@@ -85,8 +85,8 @@ class DokterInfo(Akun):
 # Model untuk Apoteker (turunan Akun)
 class ApotekerInfo(Akun):
     # Informasi data diri khusus Apoteker
-    surat_tugas    = models.CharField(max_length=200, blank=True)
-    profil         = models.CharField(max_length=200, blank=True)
+    surat_tugas    = models.ImageField(upload_to='akun/media/apoteker/surat_tugas', blank=True)
+    profil         = models.ImageField(upload_to='akun/media/apoteker/profil', blank=True)
 
     # Meta untuk Apoteker
     class Meta():
