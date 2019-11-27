@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 # Memasukan model dan form
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 from pengobatan.models import PoliInfo, JadwalPraktekInfo, ObatInfo, PengobatanInfo
 from guidelines.models import Guideline
-from pengobatan.forms import VerifikasiForm, JadwalForm, PengobatanForm, UbahProfilForm
+from pengobatan.forms import VerifikasiForm, BerobatForm, SelesaiForm, JadwalForm, PengobatanForm, UbahProfilForm, PoliForm
 from guidelines.forms import GuidelineForm
 
 # Fungsi utilitas
@@ -117,8 +118,8 @@ def beranda(request, tipe):
                                                                 'berkas': berkas,
                                                             })
         if request.user.tipe == 'dokter' and tipe == 'dokter':
-            antrian_pasien = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, sudah_ditangani=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
-            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_ditangani=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
+            antrian_pasien = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, sudah_ditangani=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
+            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
             return render(request, 'dokter/beranda.html', context={
                                                             'waktu': waktu,
                                                             'user': akun,
@@ -126,7 +127,7 @@ def beranda(request, tipe):
                                                             'antrian_apotek': antrian_apotek,
                                                         })
         if request.user.tipe == 'apoteker' and tipe == 'apoteker':
-            antrian_obat_masuk = PengobatanInfo.objects.filter(sudah_ditangani=True, sudah_berobat=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
+            antrian_obat_masuk = PengobatanInfo.objects.filter(sudah_verifikasi=True,   sudah_ditangani=True, sudah_berobat=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
             log_obat_keluar = PengobatanInfo.objects.filter(sudah_berobat=True)
             return render(request, 'apoteker/beranda.html', context={
                                                             'waktu': waktu,
@@ -157,7 +158,8 @@ def detail_pengobatan(request, tipe, antrian):
                 if verifikasi_form.is_valid():
                     if verifikasi_form.cleaned_data['verifikasi'] == '1':
                         berkas.sudah_verifikasi = True
-                    if verifikasi_form.cleaned_data['tolak'] == '1':
+                        berkas.ditolak = False
+                    else:
                         berkas.ditolak = True
                     petugas = PetugasInfo.objects.get(user=request.user)
                     berkas.petugas = petugas
@@ -167,13 +169,58 @@ def detail_pengobatan(request, tipe, antrian):
             else:
                 verifikasi_form = VerifikasiForm()
 
-            verifikasi = berkas.sudah_verifikasi
-            tolak = berkas.ditolak
             return render(request, 'petugas/detail_pengobatan.html', context={
-                                                                        'verifikasi': verifikasi,
-                                                                        'tolak': tolak,
                                                                         'berkas': berkas,
                                                                         'verifikasi_form': verifikasi_form,
+                                                                        'user': akun
+                                                                    })
+        if request.user.tipe == 'dokter' and tipe == 'dokter':
+            berkas = PengobatanInfo.objects.get(id=antrian)
+
+            if request.method == "POST":
+                berobat_form = BerobatForm(data=request.POST)
+
+                if berobat_form.is_valid():
+                    if berobat_form.cleaned_data['berobat'] == '1':
+                        berkas.sudah_ditangani = True
+                        berkas.ditolak = False
+                    dokter = DokterInfo.objects.get(user=request.user)
+                    berkas.dokter = dokter
+                    berkas.save()
+                else:
+                    return HttpResponse("Ada kesalahan")
+            else:
+                berobat_form = BerobatForm()
+
+            return render(request, 'dokter/detail_antrian.html', context={
+                                                                        'berkas': berkas,
+                                                                        'berobat_form': berobat_form,
+                                                                        'user': akun
+                                                                    })
+        if request.user.tipe == 'apoteker' and tipe == 'apoteker':
+            berkas = PengobatanInfo.objects.get(id=antrian)
+
+            if request.method == "POST":
+                selesai_form = SelesaiForm(data=request.POST)
+
+                if selesai_form.is_valid():
+                    if selesai_form.cleaned_data['selesai'] == '1':
+                        berkas.sudah_berobat = True
+                    elif selesai_form.cleaned_data['selesai'] == '0':
+                        berkas.sudah_ditangani = False
+                        berkas.sudah_berobat = False
+                        berkas.ditolak = True
+                    apoteker = ApotekerInfo.objects.get(user=request.user)
+                    berkas.apoteker = apoteker
+                    berkas.save()
+                else:
+                    return HttpResponse("Ada kesalahan")
+            else:
+                selesai_form = SelesaiForm()
+
+            return render(request, 'apoteker/detail_antrian.html', context={
+                                                                        'berkas': berkas,
+                                                                        'selesai_form': selesai_form,
                                                                         'user': akun
                                                                     })
         else:
@@ -193,7 +240,7 @@ def antrian_pasien(request, tipe):
 
         if request.user.tipe == 'petugas' and tipe == 'petugas':
             awal, akhir = waktu_hari_ini()
-            antrian_pasien = PengobatanInfo.objects.filter(sudah_verifikasi=True, sudah_ditangani=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            antrian_pasien = PengobatanInfo.objects.filter(sudah_verifikasi=True, sudah_ditangani=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
             log_antrian = PengobatanInfo.objects.all().order_by('-tanggal_berkunjung')
             return render(request, 'petugas/antrian_pasien.html', context={
                                                                     'antrian_pasien':antrian_pasien,
@@ -228,57 +275,77 @@ def poli(request, tipe):
     else:
         return redirect('welcome')
 
-# Halaman untuk melihat jadwal dari poli
-def jadwal_poli(request, tipe, nama_poli):
+def tambah_poli(request, tipe):
     waktu = datetime.now()
     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
 
     if request.user.is_authenticated:
         akun = load_akun_by_tipe(request.user, tipe)
-        if akun is None:
-            return redirect('welcome')
-
-        if request.user.tipe == 'petugas' and tipe == 'petugas':
-            jadwal = JadwalPraktekInfo.objects.filter(poli__nama=nama_poli)
-            return render(request, 'petugas/jadwal_poli.html', context={
-                                                                'jadwal': jadwal,
-                                                                'waktu': waktu,
-                                                                'user': akun,
-                                                            })
+        if request.method == "POST":
+            poli_form = PoliForm(data=request.POST)
+            if poli_form.is_valid():
+                poli_form.save()
+                return redirect('pengobatan:poli', tipe=tipe)
+            else:
+                messages.info(request, "Perubahan gagal dilakukan")
+                return redirect("pengobatan:poli", tipe=tipe, )
         else:
-            return redirect('pengobatan:beranda', tipe=request.user.tipe)
+            poli_form = PoliForm()
+        return render(request, 'petugas/tambah_poli.html', context={
+                                                            'user': akun,
+                                                            'poli_form': poli_form,
+                                                            })
     else:
         return redirect('welcome')
 
 # Halaman untuk melihat detail jadwal dan mengubah jadwal terkait
+def tambah_jadwal(request, tipe, nama_poli):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        if request.method == "POST":
+            jadwal_form = JadwalForm(data=request.POST)
+            if jadwal_form.is_valid():
+                jadwal_form.save()
+                return redirect('pengobatan:poli', tipe=tipe)
+            else:
+                messages.info(request, "Perubahan gagal dilakukan")
+                return redirect("pengobatan:jadwal", tipe=tipe, nama_poli=nama_poli)
+        else:
+            jadwal_form = JadwalForm()
+        return render(request, 'petugas/tambah_jadwal.html', context={
+                                                            'user': akun,
+                                                            'jadwal_form': jadwal_form,
+                                                            })
+    else:
+        return redirect('welcome')
+
 def ubah_jadwal(request, tipe, nama_poli, jadwal):
     waktu = datetime.now()
     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
 
     if request.user.is_authenticated:
         akun = load_akun_by_tipe(request.user, tipe)
-        if akun is None:
-            return redirect('welcome')
-
-        if request.user.tipe == 'petugas' and tipe == 'petugas':
-            berubah = False
-            if request.method == "POST":
-                jadwal_form = JadwalForm(data=request.POST)
-                jadwal = jadwal_form.save()
-
+        berubah = False
+        jadwal_data = JadwalPraktekInfo.objects.get(pk=jadwal)
+        if request.method == "POST":
+            jadwal_form = JadwalForm(data=request.POST, instance=jadwal_data)
+            if jadwal_form.is_valid():
+                jadwal_data = jadwal_form.save()
                 berubah = True
+                return redirect('pengobatan:poli', tipe=tipe)
             else:
-                jadwal_form = JadwalForm()
-                jadwal = JadwalPraktekInfo.objects.get(pk=jadwal)
-
-            return render(request, 'petugas/ubah_jadwal.html', context={
-                                                            'jadwal_form': jadwal_form,
-                                                            'jadwal': jadwal,
-                                                            'waktu': waktu,
-                                                            'user': akun,
-                                                        })
+                messages.info(request, "Perubahan gagal dilakukan")
+                return redirect("pengobatan:jadwal", tipe=tipe, nama_poli=nama_poli, jadwal=jadwal_data.id )
         else:
-            return redirect('pengobatan:beranda', tipe=request.user.tipe)
+            jadwal_form = JadwalForm(instance=jadwal_data)
+        return render(request, 'petugas/ubah_jadwal.html', context={
+                                                            'berubah': berubah,
+                                                            'jadwal_form': jadwal_form,
+                                                            'user': akun
+                                                            })
     else:
         return redirect('welcome')
 
@@ -322,6 +389,7 @@ def ubah_petunjuk(request, id, tipe):
                 petunjuk_form = GuidelineForm(request.POST, request.FILES, instance=guide) 
                 if petunjuk_form.is_valid(): 
                     petunjuk_form.save()
+                    return redirect('pengobatan:petunjuk', tipe=request.user.tipe)
 
                 berubah = True
             else:
@@ -354,20 +422,28 @@ def log_obat(request, tipe):
                                                                     'waktu': waktu,
                                                                     'user': akun,
                                                                 })
+        if request.user.tipe == 'apoteker' and tipe == 'apoteker':
+            awal, akhir = waktu_hari_ini()
+            pasien_berobat = PengobatanInfo.objects.filter(apoteker=akun, sudah_berobat=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            return render(request, 'apoteker/log_obat_keluar.html', context={
+                                                                    'pasien_berobat': pasien_berobat,
+                                                                    'waktu': waktu,
+                                                                    'user': akun,
+                                                                })
         else:
             return redirect('pengobatan:beranda', tipe=request.user.tipe)
     else:
         return redirect('welcome')
 
-def pengaturan(request):
-    waktu = datetime.now()
-    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-    user = request.user
-    if user.is_authenticated:
-        akun = load_akun_by_tipe(user, user.tipe)
-        if user.tipe == 'petugas':
-            return render(request, 'petugas/pengaturan.html', {'waktu': waktu, 'user': akun})
-        if user.tipe == 'dokter':
-            return render(request, 'dokter/pengaturan.html', {'waktu': waktu, 'user': akun})
-        if user.tipe == 'apoteker':
-            return render(request, 'apoteker/pengaturan.html', {'waktu': waktu, 'user': akun})
+# def pengaturan(request):
+#     waktu = datetime.now()
+#     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+#     user = request.user
+#     if user.is_authenticated:
+#         akun = load_akun_by_tipe(user, user.tipe)
+#         if user.tipe == 'petugas':
+#             return render(request, 'petugas/pengaturan.html', {'waktu': waktu, 'user': akun})
+#         if user.tipe == 'dokter':
+#             return render(request, 'dokter/pengaturan.html', {'waktu': waktu, 'user': akun})
+#         if user.tipe == 'apoteker':
+#             return render(request, 'apoteker/pengaturan.html', {'waktu': waktu, 'user': akun})

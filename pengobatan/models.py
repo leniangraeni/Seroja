@@ -34,6 +34,7 @@ class JadwalPraktekInfo(models.Model):
     def __str__(self):
         return "{}, {}".format(self.dokter, self.poli)
 
+
 # Model informasi obat
 class ObatInfo(models.Model):
     nama      = models.CharField(max_length=20)
@@ -60,7 +61,7 @@ class PengobatanInfo(models.Model):
     pesan_penolakan  = models.CharField(max_length=200, blank=True)
 
     # Informasi tambahan
-    tanggal_berkunjung = models.DateTimeField()
+    tanggal_berkunjung = models.DateField()
     keluhan            = models.CharField(max_length=200)
     rujukan            = models.CharField(max_length=200)
     dosis              = models.PositiveIntegerField(default=0)
