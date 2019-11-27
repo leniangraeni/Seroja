@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %} SEROJA {% endblock %}
-
 {% block content %}
-  <div class="card-body register-card-body">
+<div class="col-md-3">
+  <div class="register-logo">
+    <b>SEROJA</b>
+  </div>
+  
+  <div class="card-body register-card-body" style="box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">
     <p class="login-box-msg">Daftar Akun</p>
 
       <div class="social-auth-links text-center">
@@ -17,7 +20,7 @@
           Apoteker
         </a>
       </div>
-
-      <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p>
-    </div>
+    <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a></p>
+  </div>
+</div>
 {% endblock %}

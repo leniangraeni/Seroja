@@ -1,115 +1,100 @@
 {% extends 'base.html' %}
 
-{% block title %}
-  <body class="hold-transition register-page">
-    <div class="register-box">
-      <div class="register-logo">
-        <a href="#">
-          <b>Daftar
-          {% if tipe == 'petugas' %}
-            Petugas
-          {% elif tipe == 'dokter' %}
-            Dokter
-          {% elif tipe == 'apoteker' %}
-            Apoteker
-          {% endif %}
-          </b>
+{% block content %}
+<div class="col-md-7  ">
+  {% if registered %}
+  <div class="card card-info">
+    <div class="card-header">
+      Registrasi Berhasil
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        Akun Anda Berhasil dibuat. Silakan klik &nbsp;<a href="{% url 'accounts:login' %}"> Login </a> &nbsp; untuk masuk akun
       </div>
     </div>
-{% endblock %}
-
-{% block content %}
-    {% if registered %}
-    
-      <h1>Registrasi Berhasil</h1>
-      <p>
-        Akun telah berhasil dibuat.
-      </p>
-      <a href="{% url 'accounts:login' %}">Kembali ke halaman Login</a>
-    {% else %}
-      {% if messages %}
-        {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-      {% endif %}
-        <div class="card-body register-card-body">
-          <p class="login-box-msg">Register a new member</p>
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="input-group mb-3">
-              <input type="text"  name="username" class="form-control" placeholder="Nomor Pegawai">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-edit"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="password"  name="password" class="form-control" placeholder="Kata Sandi">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="text"  name="nama" class="form-control" placeholder="Nama">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-user"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="text"  name="tempat_lahir" class="form-control" placeholder="Tempat Lahir">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-home"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group date mb-3" data-provide="datepicker" date-date-format="dd/mm/yyyy" placeholder="Tanggal Lahir">
-              <input type="date"  name="tanggal_lahir" class="form-control">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-calendar"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <!-- <input type="" name="jenis_kelamin" class="form-control"> -->
-              <!-- {{ akun_form.jenis_kelamin }} -->
-              <select name="jenis_kelamin" class="form-control">
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
-
-              </select>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class=""></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="text"  name="nomor_telepon" class="form-control" placeholder="Nomor Telepon">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-phone"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3 ">
-              <input type="textbox"  name="alamat" class="form-control" placeholder="Alamat">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-edit"></span>
-                 </div>
-              </div>
-            </div>
-            <input type="hidden" name="tipe" value="{{ tipe }}">
-            <button type="sumbit" class="btn btn-primary btn-block btn-flat">Register</button>
-          </form>
-        </div>
+  </div>
+  {% else %}
+    {% if messages %}
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
     {% endif %}
+  <div class="card card-primary">
+    <div class="card-header">
+      {% if tipe == 'petugas' %}
+        <h3 class="card-title">Daftar Akun Petugas</h3>
+      {% elif tipe == 'dokter' %}
+        <h3 class="card-title">Daftar Akun Dokter</h3>
+      {% elif tipe == 'apoteker' %}
+        <h3 class="card-title">Daftar Akun Apoteker</h3>
+      {% endif %}
+    </div>
+
+    <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card-body">
+        <div class="form-group row">
+          <label for="username" class="col-sm-2 col-form-label">Nomor Pegawai</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="username" placeholder="Nomor Pegawai">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="password" class="col-sm-2 col-form-label">Kata Sandi</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" name="password" placeholder="Kata Sandi">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="nama" placeholder="Nama">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tempat_lahir" class="col-sm-2 col-form-label">Tempat Lahir</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="tempat_lahir" placeholder="Tempat Lahir">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tanggal_lahir" class="col-sm-2 col-form-label">Tanggal Lahir</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" name="tanggal_lahir" placeholder="Tanggal Lahir">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="jenis_kelamin" class="col-sm-2 col-form-label">Jenis Kelamin</label>
+          <div class="col-sm-10">
+            <select name="jenis_kelamin" class="form-control">
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="nomor_telepon" class="col-sm-2 col-form-label">Nomor Telepon</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="nomor_telepon" placeholder="Nomor Telepon">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="alamat" placeholder="Alamat">
+          </div>
+        </div>
+      </div>
+      <input type="hidden" name="tipe" value="{{ tipe }}">
+
+      <div class="card-footer">
+        <button type="sumbit" class="btn btn-primary btn-block btn-flat" style="border-radius:20pt; box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">Register</button>
+        <br>
+        <p>Sudah memiliki akun? <a href="{% url 'accounts:login' %}">Masuk ke Akun</a> </p> 
+      </div>
+      
+    </form>
+    {% endif %}
+    
+</div>
 {% endblock %}

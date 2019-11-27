@@ -8,8 +8,7 @@ from accounts.models import PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 # Model informasi poli
 class PoliInfo(models.Model):
     nama             = models.CharField(max_length=20)
-    penanggung_jawab = models.CharField(max_length=20)
-
+    penanggung_jawab = models.ForeignKey(DokterInfo, on_delete=models.CASCADE)
     def __str__(self):
         return self.nama
 
@@ -20,9 +19,17 @@ class JadwalPraktekInfo(models.Model):
     poli   = models.ForeignKey(PoliInfo, on_delete=models.CASCADE)
 
     # Informasi tambahan
-    hari          = models.DateTimeField()
-    waktu_mulai   = models.DateTimeField()
-    waktu_selesai = models.DateTimeField()
+    HARI_CHOICES = (
+        ('1', 'Senin'),
+        ('2', 'Selasa'),
+        ('3', 'Rabu'),
+        ('4', 'Kamis'),
+        ('5', 'Jumat'),
+        ('6', 'Sabtu'),
+    )
+    hari = models.CharField(max_length=1, choices=HARI_CHOICES)
+    waktu_mulai   = models.TimeField()
+    waktu_selesai = models.TimeField()
 
     def __str__(self):
         return "{}, {}".format(self.dokter, self.poli)

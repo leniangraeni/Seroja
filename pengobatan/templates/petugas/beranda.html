@@ -15,7 +15,7 @@
               <th width='20%'>Nama</th>
               <th>Keluhan</th>
               <th>Poli</th>
-              <th>Tamggal Berkunjung</th>
+              <th>Tanggal Berkunjung</th>
               <th>Waktu</th>
               <th>Dokter</th>
             </tr>
@@ -28,7 +28,7 @@
                 <td>{{ b.jadwal.poli }}</td>
                 <td>{{ b.tanggal_berkunjung }}</td>
                 <td>{{ b.jadwal.waktu_mulai }} - {{ b.jadwal.waktu_selesai }}</td>
-                <td>{{ b.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=b.pk %}">Detail</a></td>
+                <td>{{ b.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=b.pk %}" style="float: right;">Detail</a></td>
               </tr>
               {% endfor %}
             </tbody>

@@ -12,13 +12,14 @@
           {% for guideline in guides %}
             <img src="{{ guideline.guide.url }}">
             <br>
-            <a href="{% url 'pengobatan:ubah_petunjuk' %}">Ubah</a>
-            <a href="">Tambah</a>
+            <a href="{% url 'pengobatan:ubah_petunjuk' tipe=request.user.tipe id=guideline.id %}" style="float: right;">Ubah</a>
           {% endfor %}
         {% else %}
-          <h1>Tidak ada Guideline</h1>
-          <a href="">Tambah</a>
+          <div>
+              Belum ada petunjuk
+          </div>
         {% endif %}
+        
         </div>
       </div>
     </div>

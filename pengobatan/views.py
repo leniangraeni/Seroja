@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 # Memasukan model dan form
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 from pengobatan.models import PoliInfo, JadwalPraktekInfo, ObatInfo, PengobatanInfo
 from guidelines.models import Guideline
-from pengobatan.forms import VerifikasiForm, JadwalForm, UbahProfilForm
+from pengobatan.forms import VerifikasiForm, JadwalForm, PengobatanForm, UbahProfilForm
+from guidelines.forms import GuidelineForm
 
 # Fungsi utilitas
 from datetime import datetime, timedelta, time
@@ -91,6 +94,7 @@ def ubah_profil(request, tipe):
         return render(request, 'petugas/ubah_profil.html', context={
                                                             'berubah': berubah,
                                                             'profil_form': profil_form,
+                                                            'user': akun
                                                             })
     else:
         return redirect('welcome')
@@ -106,15 +110,15 @@ def beranda(request, tipe):
         if akun is None:
             return redirect('welcome')
         if request.user.tipe == 'petugas' and tipe == 'petugas':
-            berkas = PengobatanInfo.objects.filter(sudah_verifikasi=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
+            berkas = PengobatanInfo.objects.filter(sudah_verifikasi=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
             return render(request, 'petugas/beranda.html', context={
                                                                 'waktu': waktu,
                                                                 'user': akun,
                                                                 'berkas': berkas,
                                                             })
         if request.user.tipe == 'dokter' and tipe == 'dokter':
-            antrian_pasien = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
-            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_ditangani=True)
+            antrian_pasien = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, sudah_ditangani=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
+            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_ditangani=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
             return render(request, 'dokter/beranda.html', context={
                                                             'waktu': waktu,
                                                             'user': akun,
@@ -170,6 +174,7 @@ def detail_pengobatan(request, tipe, antrian):
                                                                         'tolak': tolak,
                                                                         'berkas': berkas,
                                                                         'verifikasi_form': verifikasi_form,
+                                                                        'user': akun
                                                                     })
         else:
             return redirect('pengobatan:beranda', tipe=request.user.tipe)
@@ -188,8 +193,8 @@ def antrian_pasien(request, tipe):
 
         if request.user.tipe == 'petugas' and tipe == 'petugas':
             awal, akhir = waktu_hari_ini()
-            antrian_pasien = PengobatanInfo.objects.filter(sudah_verifikasi=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
-            log_antrian = PengobatanInfo.objects.all().order_by('tanggal_berkunjung')
+            antrian_pasien = PengobatanInfo.objects.filter(sudah_verifikasi=True, sudah_ditangani=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            log_antrian = PengobatanInfo.objects.all().order_by('-tanggal_berkunjung')
             return render(request, 'petugas/antrian_pasien.html', context={
                                                                     'antrian_pasien':antrian_pasien,
                                                                     'log_antrian': log_antrian,
@@ -197,7 +202,7 @@ def antrian_pasien(request, tipe):
                                                                     'user': akun,
                                                                 })
         else:
-            return redirect('pengobatan:beranda', tipe=request.user.tip)
+            return redirect('pengobatan:beranda', tipe=request.user.tipe)
     else:
         return redirect('welcome')
 
@@ -300,17 +305,59 @@ def petunjuk(request, tipe):
         return redirect('welcome')
 
 # Halaman untuk mengubah isi petunjuk
-
-def log_obat(request):
+def ubah_petunjuk(request, id, tipe):
     waktu = datetime.now()
     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-    user = request.user
-    if user.is_authenticated:
-        akun = load_akun_by_tipe(user, user.tipe)
-        if user.tipe == 'dokter':
-            return render(request, 'dokter/log_pemberian_obat.html', {'waktu': waktu, 'user': akun})
-        if user.tipe == 'apoteker':
-            return render(request, 'apoteker/log_obat_keluar.html', {'waktu': waktu, 'user': akun})
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        if akun is None:
+            return redirect('welcome')
+
+        if request.user.tipe == 'petugas' and tipe == 'petugas':
+            berubah = False
+            guide = get_object_or_404(Guideline, pk=id)
+            petunjuk_form = GuidelineForm(instance=guide) 
+            if request.method == "POST":
+                petunjuk_form = GuidelineForm(request.POST, request.FILES, instance=guide) 
+                if petunjuk_form.is_valid(): 
+                    petunjuk_form.save()
+
+                berubah = True
+            else:
+                petunjuk_form = GuidelineForm()
+
+            return render(request, 'petugas/ubah_petunjuk.html', context={
+                                                            'petunjuk_form': petunjuk_form,
+                                                            'waktu': waktu,
+                                                            'user': akun,
+                                                        })
+        else:
+            return redirect('pengobatan:beranda', tipe=request.user.tipe)
+    else:
+        return redirect('welcome')
+
+def log_obat(request, tipe):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        if akun is None:
+            return redirect('welcome')
+
+        if request.user.tipe == 'dokter' and tipe == 'dokter':
+            awal, akhir = waktu_hari_ini()
+            pasien_berobat = PengobatanInfo.objects.filter(dokter=akun, sudah_berobat=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            return render(request, 'dokter/log_pemberian_obat.html', context={
+                                                                    'pasien_berobat': pasien_berobat,
+                                                                    'waktu': waktu,
+                                                                    'user': akun,
+                                                                })
+        else:
+            return redirect('pengobatan:beranda', tipe=request.user.tipe)
+    else:
+        return redirect('welcome')
 
 def pengaturan(request):
     waktu = datetime.now()
