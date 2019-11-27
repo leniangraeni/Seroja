@@ -11,22 +11,27 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
               <th width='30%'>Nama</th>
+              <th>Keluhan</th>
               <th>Resep Obat</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Lenna</td>
-              <td>Paracetamol <a href="" style="float: right;">Detail</a> </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Jacob</td>
-              <td>Bodrex <a href="" style="float: right;">Detail</a> </td>
-            </tr>
+              {% for pasien in antrian_obat_masuk %}
+                <tr>
+                  <td>{{ pasien.pasien }}</td>
+                  <td>{{ pasien.keluhan }}</td>
+                  <td>{{ pasien.obat }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
+                </tr>
+              {% endfor %}
+              {% for pasien in antrian_apotek %}
+                {% if pasien.ditolak %}
+                  <tr>
+                    <td>{{ pasien.pasien }}</td>
+                    <td>Ditolak</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -44,19 +49,23 @@
           <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th width='5%'>No</th>
               <th width='30%'>Nama</th>
-              <th>Resep Obat</th>
               <th>Keterangan</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Leo</td>
-              <td>Panadol</td>
-              <td>Selesai</td>
-            </tr>
+            {% for resep in antrian_apotek %}
+              <tr>
+                <td>{{ resep.pasien }}</td>
+                {% if resep.sudah_berobat %}
+                  <td>Selesai</td>
+                {% elif resep.ditolak %}
+                  <td>Resep ditolak</td>
+                {% else %}
+                  <td>Menunggu obat</td>
+                {% endif %}
+              </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>

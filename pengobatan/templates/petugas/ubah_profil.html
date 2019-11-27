@@ -10,7 +10,7 @@
         <div class="card-body">
           {% if berubah %}
             <h1>Berhasil diubah gan, coba aja cek</h1>
-            <a href="{url 'pengobatan:profil' tipe=request.user.tipe }">Balik ke profil</a>
+            <a href="{% url 'pengobatan:profil' tipe=request.user.tipe %}">Balik ke profil</a>
           {% else %}
             <h1>Ubah profilnya gan</h1>
             <form method="post">

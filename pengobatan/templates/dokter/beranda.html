@@ -19,16 +19,8 @@
               {% for pasien in antrian_pasien %}
                 <tr>
                   <td>{{ pasien.pasien }}</td>
-                  <td>{{ pasien.keluhan }}</td>
+                  <td>{{ pasien.keluhan }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
                 </tr>
-              {% endfor %}
-              {% for pasien in antrian_apotek %}
-                {% if pasien.ditolak %}
-                  <tr>
-                    <td>{{ pasien.pasien }}</td>
-                    <td>Ditolak</td>
-                  </tr>
-                {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -56,12 +48,13 @@
               <tr>
                 <td>{{ resep.pasien }}</td>
                 {% if resep.sudah_berobat %}
-                  <td>Selesai</td>
+                  <td>Selesai<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
                 {% elif resep.ditolak %}
-                  <td>Resep ditolak</td>
+                  <td>Resep ditolak<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
                 {% else %}
-                  <td>Menunggu obat</td>
+                  <td>Menunggu obat<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
                 {% endif %}
+
               </tr>
             {% endfor %}
             </tbody>

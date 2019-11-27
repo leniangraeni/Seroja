@@ -1,4 +1,4 @@
-{% extends 'petugas/sidebar.html' %}
+{% extends 'apoteker/sidebar.html' %}
 
   {% block content %}
   <div class="container">
@@ -48,16 +48,17 @@
       </tbody>
     </table>
 
-    {% if berkas.sudah_verifikasi %}
-      <h3>Berkas sudah diverifikasi</h3>
+    {% if berkas.sudah_berobat %}
+      <h3>Pengobatan Selesai</h3>
     {% elif berkas.ditolak %}
-      <h3>Berkas ditolak </h3>
+      <h3>Resep ditolak </h3>
     {% else %}
-        <form method="post">
-          {% csrf_token %}
-          <button name="verifikasi" type="submit" value='1'>Verifikasi</button>
-          <button name="verifikasi" type="submit" value='0'>Tolak</button>
-        </form>
+    <form method="post">
+        {% csrf_token %}
+        <button  type="submit" >Panggil</button>
+        <button name="selesai" type="submit" value='1'>Selesai</button>
+        <button name="selesai" type="submit" value='0'>Tolak</button>
+      </form>
     {% endif %}
   </div>
   {% endblock %}

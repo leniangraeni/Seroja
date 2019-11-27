@@ -1,6 +1,6 @@
 from django import forms
 
-from pengobatan.models import JadwalPraktekInfo, PengobatanInfo
+from pengobatan.models import JadwalPraktekInfo, PengobatanInfo, PoliInfo
 from guidelines.models import Guideline
 
 class UbahProfilForm(forms.Form):
@@ -20,7 +20,17 @@ class UbahProfilForm(forms.Form):
 
 class VerifikasiForm(forms.Form):
     verifikasi = forms.CharField()
-    tolak      = forms.CharField()
+
+class BerobatForm(forms.Form):
+    berobat = forms.CharField()
+
+class SelesaiForm(forms.Form):
+    selesai = forms.CharField()
+
+class PoliForm(forms.ModelForm):
+    class Meta():
+        model = PoliInfo
+        fields = '__all__'
 
 class JadwalForm(forms.ModelForm):
     class Meta():
@@ -36,3 +46,4 @@ class PengobatanForm(forms.ModelForm):
     class Meta():
         model = PengobatanInfo
         fields = '__all__'
+
