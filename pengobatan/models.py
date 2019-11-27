@@ -55,7 +55,7 @@ class PengobatanInfo(models.Model):
     # Informasi tambahan
     tanggal_berkunjung = models.DateTimeField()
     keluhan            = models.CharField(max_length=200)
-    rujukan            = models.ImageField(upload_to='rujukan/', blank=True)
+    rujukan            = models.CharField(max_length=200)
     dosis              = models.PositiveIntegerField(default=0)
     aturan             = models.CharField(max_length=200, blank=True)
     catatan            = models.CharField(max_length=200, blank=True)
