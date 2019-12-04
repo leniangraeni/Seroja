@@ -20,7 +20,7 @@ urlpatterns = [
     path('', views.welcome, name="welcome"),
     path('guidelines/', include('guidelines.urls')),
     path('accounts/', include('accounts.urls')),
-    path('<tipe>/', include('pengobatan.urls')),
+    path('api/', include('api.urls')),
 ]
 
 if settings.DEBUG:
