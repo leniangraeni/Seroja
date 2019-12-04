@@ -33,7 +33,6 @@ AUTH_USER_MODEL = 'accounts.SerojaUser'
 # Application definition
 
 INSTALLED_APPS = [
-    'guidelines.apps.GuidelinesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,18 +40,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Generated Apps
+    'accounts.apps.AccountsConfig',
+    'guidelines.apps.GuidelinesConfig',
+    'pengobatan.apps.PengobatanConfig',
+
+    # API
+    'api.apps.ApiConfig',
     'rest_framework',
     'rest_framework.authtoken',
-
-    'accounts.apps.AccountsConfig',
-    'pengobatan.apps.PengobatanConfig',
-    'api.apps.ApiConfig',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
 }
 
 MIDDLEWARE = [

@@ -13,7 +13,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Memasukan views
-from . import views
+from seroja import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

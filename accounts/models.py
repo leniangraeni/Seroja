@@ -1,33 +1,31 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-# Create your models here.
 
+# Pilihan Masukan
+TIPE_CHOICES = (
+    ('admin', 'Admin'),
+    ('pasien', 'Pasien'),
+    ('petugas', 'Petugas'),
+    ('dokter', 'Dokter'),
+    ('apoteker', 'Apoteker'),
+)
+
+# Pilihan Masukan
+JK_CHOICES = (
+    ('L', 'Laki-laki'),
+    ('P', 'Perempuan'),
+)
+
+# Create your models here.
 # Model ekstensi dari User
 class SerojaUser(AbstractUser):
-    # Pilihan Masukan
-    TIPE_CHOICES = (
-        ('admin', 'Admin'),
-        ('pasien', 'Pasien'),
-        ('petugas', 'Petugas'),
-        ('dokter', 'Dokter'),
-        ('apoteker', 'Apoteker'),
-    )
-
     tipe = models.CharField(max_length=10, choices=TIPE_CHOICES, default='admin')
 
 # Model Abstrak untuk semua akun
 class Akun(models.Model):
     # Untuk Autentikasi
-    # username = username (pasien), nomor_pegawai (petugas)
-    # password
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    # Pilihan Masukan
-    JK_CHOICES = (
-        ('L', 'Laki-laki'),
-        ('P', 'Perempuan'),
-    )
 
     # Informasi data diri Akun
     nama          = models.CharField(max_length=20)
@@ -73,7 +71,6 @@ class DokterInfo(Akun):
     # Informasi data diri khusus Dokter
     surat_tugas    = models.ImageField(upload_to='akun/media/dokter/surat_tugas', blank=True)
     profil         = models.ImageField(upload_to='akun/media/dokter/profil', blank=True)
-    # poli        = models.ForeignKey(Poli, on_delete=models.CASCADE)
 
     # Meta untuk Dokter
     class Meta():

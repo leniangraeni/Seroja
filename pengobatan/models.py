@@ -3,8 +3,17 @@ from django.db import models
 # Memasukan model dan form
 from accounts.models import PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 
-# Create your models here.
+# Informasi tambahan
+HARI_CHOICES = (
+    ('1', 'Senin'),
+    ('2', 'Selasa'),
+    ('3', 'Rabu'),
+    ('4', 'Kamis'),
+    ('5', 'Jumat'),
+    ('6', 'Sabtu'),
+)
 
+# Create your models here.
 # Model informasi poli
 class PoliInfo(models.Model):
     nama             = models.CharField(max_length=20)
@@ -18,22 +27,12 @@ class JadwalPraktekInfo(models.Model):
     dokter = models.ForeignKey(DokterInfo, on_delete=models.CASCADE)
     poli   = models.ForeignKey(PoliInfo, on_delete=models.CASCADE)
 
-    # Informasi tambahan
-    HARI_CHOICES = (
-        ('1', 'Senin'),
-        ('2', 'Selasa'),
-        ('3', 'Rabu'),
-        ('4', 'Kamis'),
-        ('5', 'Jumat'),
-        ('6', 'Sabtu'),
-    )
     hari = models.CharField(max_length=1, choices=HARI_CHOICES)
     waktu_mulai   = models.TimeField()
     waktu_selesai = models.TimeField()
 
     def __str__(self):
         return "{}, {}".format(self.dokter, self.poli)
-
 
 # Model informasi obat
 class ObatInfo(models.Model):
@@ -63,7 +62,7 @@ class PengobatanInfo(models.Model):
     # Informasi tambahan
     tanggal_berkunjung = models.DateField()
     keluhan            = models.CharField(max_length=200)
-    rujukan            = models.CharField(max_length=200)
+    rujukan            = models.ImageField(max_length=200)
     dosis              = models.PositiveIntegerField(default=0)
     aturan             = models.CharField(max_length=200, blank=True)
     catatan            = models.CharField(max_length=200, blank=True)

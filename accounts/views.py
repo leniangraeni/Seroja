@@ -16,7 +16,6 @@ from guidelines.models import Guideline
 # Fungsi utilitas
 import datetime
 
-
 # Halaman pilihan jenis login
 def register(request):
     return render(request, "register.html")

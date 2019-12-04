@@ -1,13 +1,14 @@
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
 
+# Memasukan views
 from api import views
 
 urlpatterns = [
-    path('guideline/', views.guideline_view, name="guideline_pasien"),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
-    path('register/', views.register, name="register_pasien"),
-    path('pasien/', views.pasien_view, name="pasien_pasien"),
-    path('status/', views.status_pendaftaran, name='status_pendaftaran'),
-
+    path('', views.api_root, name='api-root'),
+    path('guideline/', views.guideline_response, name='guideline_response'),
+    path('pasien_register/', views.pasien_register, name='pasien_register'),
+    path('pasien_login/', views.pasien_login, name='pasien_login'),
+    path('testing/', views.testing, name='testing'),
+    path('daftar_pengobatan/', views.daftar_pengobatan, name='daftar_pengobatan'),
+    path('status_pasien/', views.status_pasien, name='status_pasien'),
 ]
