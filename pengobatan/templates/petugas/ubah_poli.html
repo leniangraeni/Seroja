@@ -1,0 +1,49 @@
+{% extends 'petugas/sidebar.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><b>Ubah Poli</b></h3>
+            </div>
+            <div class="card-body">
+              <form method = "post"> 
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="nama" class="col-sm-3 col-form-label">Nama Poli</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="nama">
+                        {% for polis in poli %}
+                            {% if polis != poli.nama %}
+                            <option value="{{polis.id}}">{{ polis }}</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+                <div class="form-group row">
+                    <label for="penanggung_jawab" class="col-sm-3 col-form-label">Penanggung Jawab</label>
+                    <div class="col-sm-9">
+                      <select class="form-control" name="penanggung_jawab">
+                        <option value="{{poli.penanggung_jawab.id}}" selected>{{ poli.penanggung_jawab }}</option>
+                        {% for dokters in dokter %}
+                            {% if dokters != poli.penanggung_jawab %}
+                            <option value="{{dokters.id}}">{{ dokters }}</option>
+                            {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                 
+                  <div class="form-group row">
+                    <div class="offset-sm-9 col-sm-9">
+                      <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

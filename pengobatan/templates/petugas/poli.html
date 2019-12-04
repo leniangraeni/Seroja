@@ -6,60 +6,69 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"><b>Poli di Rumah Sakit</b></h3>
-        <a href="{% url 'pengobatan:tambah_poli' tipe=request.user.tipe %}">Tambah Poli</a>
+        <a href="{% url 'pengobatan:tambah_poli' tipe=request.user.tipe %}" style="float: right;">Tambah Poli</a>
+      </div>
+      <div class="card-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                  {% for p in poli %}
+                    <div class="card collapsed-card">
+                      <div class="card-header">
+                        <a href=""> Poli: {{ p.nama }}</a>
+                        <br>
+                        Penanggung Jawab: {{ p.penanggung_jawab }}
+                        <a href="{% url 'pengobatan:tambah_jadwal' tipe=request.user.tipe nama_poli=p.nama %}" style="float: right;">Tambah Jadwal Dokter</a>
+                        <br>
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="right fas fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table m-0">
+                            <thead>
+                              <tr>
+                                <th width='20%'>Hari</th>
+                                <th width='15%'>Mulai</th>
+                                <th width='15%'>Selesai</th>
+                                <th>Dokter</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for j in p.jadwalpraktekinfo_set.all %}
+                              <tr>
+                                {% if j.hari  == '1' %}
+                                  <td>Senin</td>
+                                {% elif j.hari == '2' %}
+                                  <td>Selasa</td>
+                                {% elif j.hari == '3' %}
+                                  <td>Rabu</td>
+                                {% elif j.hari == '4' %}
+                                  <td>Kamis</td>
+                                {% elif j.hari == '5' %}
+                                  <td>Jumat</td>
+                                {% elif j.hari == '6' %}
+                                  <td>Sabtu</td>
+                                {% endif %}
+                                <td>{{ j.waktu_mulai }}</td>
+                                <td>{{ j.waktu_selesai }}</td>
+                                <td>{{ j.dokter }} <a href="{% url 'pengobatan:ubah_jadwal' tipe=request.user.tipe nama_poli=p.nama jadwal=j.pk %}" style="float: right;">Ubah</a></td>
+                              </tr>
+                            {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div> 
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+        </div>
       </div>
     </div>
-    {% for p in poli %}
-      <div class="card collapsed-card">
-        <div class="card-header">
-          <a href=""> Poli: {{ p.nama }}</a>
-          <br>
-          Penanggung Jawab: {{ p.penanggung_jawab }}
-          <a href="{% url 'pengobatan:tambah_jadwal' tipe=request.user.tipe nama_poli=p.nama %}" style="float: right;">Tambah Jadwal Dokter</a>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="right fas fa-plus"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table m-0">
-              <thead>
-                <tr>
-                  <th width='20%'>Hari</th>
-                  <th width='15%'>Mulai</th>
-                  <th width='15%'>Selesai</th>
-                  <th>Dokter</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for j in p.jadwalpraktekinfo_set.all %}
-                <tr>
-                  {% if j.hari  == '1' %}
-                    <td>Senin</td>
-                  {% elif j.hari == '2' %}
-                    <td>Selasa</td>
-                  {% elif j.hari == '3' %}
-                    <td>Rabu</td>
-                  {% elif j.hari == '4' %}
-                    <td>Kamis</td>
-                  {% elif j.hari == '5' %}
-                    <td>Jumat</td>
-                  {% elif j.hari == '6' %}
-                    <td>Sabtu</td>
-                  {% endif %}
-                  <td>{{ j.waktu_mulai }}</td>
-                  <td>{{ j.waktu_selesai }}</td>
-                  <td>{{ j.dokter }} <a href="{% url 'pengobatan:ubah_jadwal' tipe=request.user.tipe nama_poli=p.nama jadwal=j.pk %}" style="float: right;">Ubah</a></td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div> 
-      </div>
-    {% endfor %}
   </div>
-</div>
+</div>          
 {% endblock %}

@@ -1,9 +1,26 @@
 {% extends 'petugas/sidebar.html' %}
 
 {% block content %}
-    <form method = "post" enctype="multipart/form-data"> 
-        {% csrf_token %} 
-        {{ petunjuk_form.as_p }} 
-        <button type="submit">Simpan Perubahan</button> 
-    </form> 
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><b>Ubah Petunjuk Berobat</b></h3>
+            </div>
+            <div class="card-body">
+                <form method = "post" enctype="multipart/form-data"> 
+                    {% csrf_token %} 
+                    <div class="form-group row">
+                        <div class="col-sm-9">
+                            <img src="{{ guides.guide.url }}" style="width: 400px;">
+                            <p></p>
+                            <input type="file" name="guide">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
