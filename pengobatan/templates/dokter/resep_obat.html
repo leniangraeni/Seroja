@@ -5,14 +5,14 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title"><b>Jadwal Praktek Poli</b></h3>
+          <h3 class="card-title"><b>Pesan Obat</b></h3>
         </div>
         <div class="card-body">
           <form method="post">
           {% csrf_token %}
           <table id="example2" class="table table-bordered table-hover">
             {{ obat_form.as_p }}
-            <input type="submit" value="Ubah">
+            <button name="berobat" type="submit" class="btn btn-primary" value='1'>Pesan Obat</button>
           </table>
          </form>
         </div>

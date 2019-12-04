@@ -1,65 +1,133 @@
 {% extends 'petugas/sidebar.html' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"><b>Profil Anda</b></h3>
-        </div>
-        <div class="card-body">
-          {% if berubah %}
-            <h1>Berhasil diubah gan, coba aja cek</h1>
-            <a href="{% url 'pengobatan:profil' tipe=request.user.tipe %}">Balik ke profil</a>
-          {% else %}
-            <h1>Ubah profilnya gan</h1>
-            <form method="post">
-              {% csrf_token %}
-              <table id="example2" class="table table-bordered table-hover">
-                  <thead>
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td width='25%'>Nama Lengkap</td>
-                      <td><input type="text" value="{{ user.nama }}" name="nama" class="form-control"></td>
-                  </tr>
-                  <tr>
-                      <td>Tempat Lahir</td>
-                      <td><input type="text" value="{{ user.tempat_lahir }}" name="tempat_lahir" class="form-control"></td>
-                  </tr>
-                  <tr>
-                      <td>Tanggal Lahir</td>
-                      <td><input type="date" value="{{ user.tanggal_lahir }}" name="tanggal_lahir" class="form-control"></td>
-                  </tr>
-                  <tr>
-                      <td>Jenis Kelamin</td>
-                      <td>
-                          <!-- {% if user.jenis_kelamin == 'P' %}
-                            <td>Perempuan</td>
-                          {% elif user.jenis_kelamin == 'L' %}
-                            <td>Laki-laki</td>
-                          {% endif %} -->
-                        <select class="form-control" value="{{ user.jenis_kelamin }}" name="jenis_kelamin">
-                          <option value="L">Laki-laki</option>
-                          <option value="P">Perempuan</option>
-                        </select>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>Nomor Telepon</td>
-                      <td><input type="text" value="{{ user.nomor_telepon }}" name="nomor_telepon" class="form-control"></td>
-                  </tr>
-                  <tr>
-                      <td>Alamat</td>
-                      <td><input type="text" value="{{ user.alamat }}" name="alamat" class="form-control"></td>
-                  </tr>
-                  </tbody>
-                </table>
-              <input type="submit" value="Ubah Data">
-            </form>
-          {% endif %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><b>Profil Anda</b></h3>
+      </div>
+      <div class="card-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3">  
+              <!-- Profile Image -->
+              <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    {% if user.profil %}
+                    <img class="profile-user-img img-fluid img-circle"
+                            src="{{ user.profil.url }}">
+                    {% endif %}
+                  </div>
+                  <h3 class="profile-username text-center">{{ user.nama }}</h3>
+                  <p class="text-muted text-center">Petugas</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#biodata" data-toggle="tab">Data Diri</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="active tab-pane" id="biodata">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                              <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                              <div class="col-sm-9">
+                                <input type="text" value="{{ user.nama }}" name="nama" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="tempat_lahir" class="col-sm-3 col-form-label">Tempat Lahir</label>
+                              <div class="col-sm-9">
+                                <input type="text" value="{{ user.tempat_lahir }}" name="tempat_lahir" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="tanggal_lahir" class="col-sm-3 col-form-label">Tanggal Lahir</label>
+                              <div class="col-sm-9">
+                                <input type="text" placeholder="{{ user.tanggal_lahir }}" name="tanggal_lahir" class="form-control"
+                                  onfocus="(this.type='date')"
+                                  onblur="(this.type='text')"
+                                  value="{{ user.tanggal_lahir }}">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="jenis_kelamin" class="col-sm-3 col-form-label">Jenis Kelamin</label>
+                              <div class="col-sm-9">
+                                <select class="form-control" name="jenis_kelamin">
+                                  {% if user.jenis_kelamin == 'L'%}
+                                    <option value='L' selected>Laki-laki</option>
+                                    <option value='P'>Perempuan</option>
+                                  {% elif user.jenis_kelamin == 'P'%}
+                                    <option value='P' selected>Perempuan</option>
+                                    <option value='L'>Laki-laki</option>
+                                  {% endif %}
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="nomor_telepon" class="col-sm-3 col-form-label">Nomor Telepon</label>
+                              <div class="col-sm-9">
+                                <input type="text" value="{{ user.nomor_telepon }}" name="nomor_telepon" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                              <div class="col-sm-9">
+                                <input type="text" value="{{ user.alamat }}" name="alamat" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="offset-sm-9 col-sm-9">
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                              </div>
+                            </div>
+                          </form>
+                    </div>
+
+                    <div class="tab-pane" id="settings">
+                      <form class="form-horizontal">
+                        <div class="form-group row">
+                          <label for="username" class="col-sm-2 col-form-label">Username</label>
+                          <div class="col-sm-10">
+                            <input type="username" value="{{ request.user.username }}" name="username" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="email" class="col-sm-2 col-form-label">Email</label>
+                          <div class="col-sm-10">
+                              <input type="email" value="{{ request.user.email }}" name="email" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="password" class="col-sm-2 col-form-label">Kata Sandi</label>
+                          <div class="col-sm-10">
+                            <input type="password" value="" name="password" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="offset-sm-9 col-sm-9">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>          
 {% endblock %}

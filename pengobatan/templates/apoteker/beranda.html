@@ -21,16 +21,8 @@
                 <tr>
                   <td>{{ pasien.pasien }}</td>
                   <td>{{ pasien.keluhan }}</td>
-                  <td>{{ pasien.obat }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
+                  <td>{{ pasien.obat }}, {{ pasien.dosis }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}" style="float: right;" >Detail</a></td>
                 </tr>
-              {% endfor %}
-              {% for pasien in antrian_apotek %}
-                {% if pasien.ditolak %}
-                  <tr>
-                    <td>{{ pasien.pasien }}</td>
-                    <td>Ditolak</td>
-                  </tr>
-                {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -40,36 +32,36 @@
   </div>
 
   <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"><b>Status Pasien</b></h3>
-        </div>
-        <div class="card-body">
-          <table id="example2" class="table table-bordered table-hover">
-            <thead>
-            <tr>
-              <th width='30%'>Nama</th>
-              <th>Keterangan</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for resep in antrian_apotek %}
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><b>Status Pasien</b></h3>
+          </div>
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-hover">
+              <thead>
               <tr>
-                <td>{{ resep.pasien }}</td>
-                {% if resep.sudah_berobat %}
-                  <td>Selesai</td>
-                {% elif resep.ditolak %}
-                  <td>Resep ditolak</td>
-                {% else %}
-                  <td>Menunggu obat</td>
-                {% endif %}
+                <th width='30%'>Nama</th>
+                <th>Keterangan</th>
               </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+              {% for resep in antrian_apotek %}
+                <tr>
+                    <td><a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}"></a>{{ resep.pasien }}</a></td>
+                  {% if resep.sudah_berobat %}
+                    <td><font color="black">Selesai</font></td>
+                  {% elif resep.ditolak %}
+                    <td><font color="red">Resep ditolak</font></td>
+                  {% else %}
+                    <td><font color="green">Menunggu obat</font></td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 {% endblock %}

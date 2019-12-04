@@ -1,50 +1,150 @@
 {% extends 'apoteker/sidebar.html' %}
+{% load static from staticfiles %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"><b>Profil Anda</b></h3>
-        </div>
-        <div class="card-body">
-          <table id="example2" class="table table-bordered table-hover">
-            <thead>
-            </thead>
-            <tbody>
-            <tr>
-                <td width='25%'>Nama Lengkap</td>
-                <td>{{ user.nama }}</td>
-            </tr>
-            <tr>
-                <td>Tempat, Tanggal Lahir</td>
-                <td>{{ user.tempat_lahir }}, {{ user.tanggal_lahir }}</td>
-            </tr>
-            <tr>
-                <td>Jenis Kelamin</td>
-                {% if user.jenis_kelamin == 'P' %}
-                  <td>Perempuan</td>
-                {% elif user.jenis_kelamin == 'L' %}
-                  <td>Laki-laki</td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td>Nomor Pegawai</td>
-                <td>{{ request.user.username }}</td>
-            </tr>
-            <tr>
-                <td>Surat Tugas</td>
-                {% if user.surat_tugas %}
-                  <td><img src="{{ user.surat_tugas.url }}" style="width: 300px;"></td>
-                {% endif %}
-            </tr>
-            </tbody>
-          </table>
-          <br>
-          <a href="{% url 'accounts:pengaturan' %}">Pengaturan Akun</a>
-          <button type="submit">Ubah Data</button>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><b>Profil Anda</b></h3>
+      </div>
+      <div class="card-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3">  
+              <!-- Profile Image -->
+              <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    {% if user.profil %}
+                    <img class="profile-user-img img-fluid img-circle"
+                            src="{{ user.profil.url }}">
+                    {% endif %}
+                  </div>
+                  <h3 class="profile-username text-center">{{ user.nama }}</h3>
+                  {% if request.user.tipe == 'petugas'%}
+                    <p class="text-muted text-center">Petugas</p>
+                  {% elif request.user.tipe == 'dokter'%}
+                    <p class="text-muted text-center">Dokter</p>
+                  {% elif request.user.tipe == 'apoteker'%}
+                    <p class="text-muted text-center">Apoteker</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#biodata" data-toggle="tab">Data Diri</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="active tab-pane" id="biodata">
+                      <form class="form-horizontal" enctype="multipart/form-data" action="{% url 'pengobatan:ubah_profil' tipe=request.user.tipe %}">
+                        <div class="form-group row">
+                          <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                          <div class="col-sm-9">
+                            <input type="text" value="{{ user.nama }}" name="nama" class="form-control" disabled>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="tempat_lahir" class="col-sm-3 col-form-label">Tempat Lahir</label>
+                          <div class="col-sm-9">
+                            <input type="text" placeholder="{{ user.tempat_lahir }}" name="tempat_lahir" class="form-control" disabled>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="tanggal_lahir" class="col-sm-3 col-form-label">Tanggal Lahir</label>
+                          <div class="col-sm-9">
+                            <input type="text" value="{{ user.tanggal_lahir }}" name="tanggal_lahir" class="form-control" disabled> 
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="jenis_kelamin" class="col-sm-3 col-form-label">Jenis Kelamin</label>
+                          <div class="col-sm-9">
+                            <select class="form-control" name="jenis_kelamin" disabled>
+                              {% if user.jenis_kelamin == 'L'%}
+                                <option value='L' selected="selected">Laki-laki</option>
+                                <option value='P'>Perempuan</option>
+                              {% elif user.jenis_kelamin == 'P'%}
+                                <option value='P' selected="selected">Perempuan</option>
+                                <option value='L'>Laki-laki</option>
+                              {% endif %}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="nomor_telepon" class="col-sm-3 col-form-label">Nomor Telepon</label>
+                          <div class="col-sm-9">
+                            <input type="text" value="{{ user.nomor_telepon }}" name="nomor_telepon" class="form-control" disabled>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                          <div class="col-sm-9">
+                            <input type="text" value="{{ user.alamat }}" name="alamat" class="form-control" disabled>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="surat_tugas" class="col-sm-3 col-form-label">Surat Tugas</label>
+                            <div class="col-sm-9">
+                              {% if user.surat_tugas %}
+                              <img src="{{user.surat_tugas.url}}" style="width: 200px;">
+                              {% else %}
+                              <input type="text" value="Tidak ada surat tugas" name="surat_tugas" class="form-control" disabled>
+                              {% endif %}
+                            </div>
+                        </div>   
+                        <div class="form-group row">
+                          <div class="offset-sm-9 col-sm-9">
+                            <button type="submit" class="btn btn-primary">Ubah Profil</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="tab-pane" id="settings">
+                      <form class="form-horizontal">
+                        <div class="form-group row">
+                          <label for="username" class="col-sm-2 col-form-label">Username</label>
+                          <div class="col-sm-10">
+                            <input type="username" value="{{ request.user.username }}" name="username" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="email" class="col-sm-2 col-form-label">Email</label>
+                          <div class="col-sm-10">
+                              <input type="email" value="{{ request.user.email }}" name="email" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="password" class="col-sm-2 col-form-label">Kata Sandi</label>
+                          <div class="col-sm-10">
+                            <input type="password" value="" name="password" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="offset-sm-9 col-sm-9">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>          
 {% endblock %}
+
+
+  
+  

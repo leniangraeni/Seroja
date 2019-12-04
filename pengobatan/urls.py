@@ -17,6 +17,7 @@ urlpatterns = [
     path('antrian/', views.antrian_pasien, name='antrian'),
     path('poli/', views.poli, name='poli'),
     path('poli/tambah', views.tambah_poli, name='tambah_poli'),
+    path('poli/ubah/<int>', views.ubah_poli, name='ubah_poli'),
     path('poli/<nama_poli>/<jadwal>/', views.ubah_jadwal, name='ubah_jadwal'),
     path('poli/<nama_poli>/', views.tambah_jadwal, name='tambah_jadwal'),
     path('profil/', views.profil, name='profil'),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('petunjuk/', views.petunjuk, name='petunjuk'),
     path('petunjuk/ubah/<int:id>', views.ubah_petunjuk, name='ubah_petunjuk'),
     path('log_obat/', views.log_obat, name='log_obat'),
+    path('resep_obat/<antrian>/', views.resep_obat, name='resep_obat'),
     # path('pengaturan/', views.pengaturan, name='pengaturan'),
 ]

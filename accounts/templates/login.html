@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="col-5">
+<div class="col-4">
   <div class="card card-primary" style="box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">
     <div class="card-header">
       <h3 class="card-title">Masuk Akun</h3>
@@ -15,7 +15,7 @@
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
-          <label for="username" class="col-sm-4 col-form-label">Nomor Pegawai</label>
+          <label for="username" class="col-sm-7 col-form-label">Nomor Pegawai</label>
           <div class="input-group">
             <input type="text" name="username" class="form-control" placeholder="Nomor Pegawai">
             <div class="input-group-append">
@@ -43,9 +43,6 @@
         </div>
       </form>
       <br>
-      <p class="mb-1">
-        <a href="#">Lupa kata sandi</a>
-      </p>
       <p>Belum memiliki akun? <a href="{% url 'accounts:register' %}">Daftar Akun</a> </p>
     </div>
   </div>  

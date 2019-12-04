@@ -8,7 +8,7 @@ from django.urls import reverse
 from accounts.models import SerojaUser, PasienInfo, PetugasInfo, DokterInfo, ApotekerInfo
 from pengobatan.models import PoliInfo, JadwalPraktekInfo, ObatInfo, PengobatanInfo
 from guidelines.models import Guideline
-from pengobatan.forms import VerifikasiForm, BerobatForm, SelesaiForm, JadwalForm, PengobatanForm, UbahProfilForm, PoliForm
+from pengobatan.forms import VerifikasiForm, BerobatForm, SelesaiForm, JadwalForm, PengobatanForm, PenolakanForm, UbahProfilForm, PoliForm
 from guidelines.forms import GuidelineForm
 
 # Fungsi utilitas
@@ -87,16 +87,33 @@ def ubah_profil(request, tipe):
                     profil_data = profil_to_model(profil_data, profil_form, ApotekerInfo)
                 profil_data.save()
                 berubah = True
+                return redirect("pengobatan:ubah_profil", tipe=tipe)
             else:
                 messages.info(request, "Perubahan gagal dilakukan")
                 return redirect("pengobatan:ubah_profil", tipe=tipe)
         else:
             profil_form = UbahProfilForm()
-        return render(request, 'petugas/ubah_profil.html', context={
-                                                            'berubah': berubah,
-                                                            'profil_form': profil_form,
-                                                            'user': akun
-                                                            })
+        if request.user.tipe == 'petugas' and tipe == 'petugas': 
+            return render(request, 'petugas/ubah_profil.html', context={
+                                                                'berubah': berubah,
+                                                                'profil_form': profil_form,
+                                                                'user': akun,
+                                                                'waktu': waktu
+                                                                })
+        elif request.user.tipe == 'dokter' and tipe == 'dokter': 
+            return render(request, 'dokter/ubah_profil.html', context={
+                                                                'berubah': berubah,
+                                                                'profil_form': profil_form,
+                                                                'user': akun,
+                                                                'waktu': waktu
+                                                                })
+        elif request.user.tipe == 'apoteker' and tipe == 'apoteker': 
+            return render(request, 'apoteker/ubah_profil.html', context={
+                                                                'berubah': berubah,
+                                                                'profil_form': profil_form,
+                                                                'user': akun,
+                                                                'waktu': waktu,
+                                                                })
     else:
         return redirect('welcome')
 
@@ -119,7 +136,7 @@ def beranda(request, tipe):
                                                             })
         if request.user.tipe == 'dokter' and tipe == 'dokter':
             antrian_pasien = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, sudah_ditangani=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
-            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
+            antrian_apotek = PengobatanInfo.objects.filter(dokter=akun, sudah_verifikasi=True, sudah_ditangani=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('-tanggal_berkunjung')
             return render(request, 'dokter/beranda.html', context={
                                                             'waktu': waktu,
                                                             'user': akun,
@@ -127,7 +144,7 @@ def beranda(request, tipe):
                                                             'antrian_apotek': antrian_apotek,
                                                         })
         if request.user.tipe == 'apoteker' and tipe == 'apoteker':
-            antrian_obat_masuk = PengobatanInfo.objects.filter(sudah_verifikasi=True,   sudah_ditangani=True, sudah_berobat=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
+            antrian_obat_masuk = PengobatanInfo.objects.filter(sudah_verifikasi=True, sudah_ditangani=True, sudah_berobat=False, ditolak=False, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir).order_by('tanggal_berkunjung')
             log_obat_keluar = PengobatanInfo.objects.filter(sudah_berobat=True)
             return render(request, 'apoteker/beranda.html', context={
                                                             'waktu': waktu,
@@ -153,75 +170,94 @@ def detail_pengobatan(request, tipe, antrian):
             berkas = PengobatanInfo.objects.get(id=antrian)
 
             if request.method == "POST":
+                penolakan_form = PenolakanForm(data=request.POST, instance=berkas)
                 verifikasi_form = VerifikasiForm(data=request.POST)
-
-                if verifikasi_form.is_valid():
-                    if verifikasi_form.cleaned_data['verifikasi'] == '1':
-                        berkas.sudah_verifikasi = True
-                        berkas.ditolak = False
+                if penolakan_form.is_valid():
+                    if verifikasi_form.is_valid():
+                        if verifikasi_form.cleaned_data['verifikasi'] == '1':
+                            berkas.sudah_verifikasi = True
+                            berkas.ditolak = False
+                        else:
+                            berkas = penolakan_form.save()
+                            berkas.ditolak = True
+                        petugas = PetugasInfo.objects.get(user=request.user)
+                        berkas.petugas = petugas
+                        berkas.save()
                     else:
-                        berkas.ditolak = True
-                    petugas = PetugasInfo.objects.get(user=request.user)
-                    berkas.petugas = petugas
-                    berkas.save()
-                else:
-                    return HttpResponse("Ada kesalahan")
+                        return HttpResponse("Ada kesalahan")
             else:
+                penolakan_form = PenolakanForm(data=request.POST, instance=berkas)
                 verifikasi_form = VerifikasiForm()
 
             return render(request, 'petugas/detail_pengobatan.html', context={
                                                                         'berkas': berkas,
+                                                                        'penolakan_form': penolakan_form,
                                                                         'verifikasi_form': verifikasi_form,
-                                                                        'user': akun
+                                                                        'user': akun,
+                                                                        'waktu': waktu
                                                                     })
         if request.user.tipe == 'dokter' and tipe == 'dokter':
             berkas = PengobatanInfo.objects.get(id=antrian)
+            obats = ObatInfo.objects.all()
 
             if request.method == "POST":
                 berobat_form = BerobatForm(data=request.POST)
-
-                if berobat_form.is_valid():
-                    if berobat_form.cleaned_data['berobat'] == '1':
-                        berkas.sudah_ditangani = True
-                        berkas.ditolak = False
-                    dokter = DokterInfo.objects.get(user=request.user)
-                    berkas.dokter = dokter
-                    berkas.save()
-                else:
-                    return HttpResponse("Ada kesalahan")
+                obat_form = PengobatanForm(data=request.POST, instance=berkas)
+                if obat_form.is_valid():
+                    if berobat_form.is_valid():
+                        if berobat_form.cleaned_data['berobat'] == '1':
+                            berkas = obat_form.save()
+                            berkas.sudah_ditangani = True
+                            berkas.ditolak = False
+                        dokter = DokterInfo.objects.get(user=request.user)
+                        berkas.dokter = dokter
+                        berkas.save()
+                        return redirect("pengobatan:detail_pengobatan", tipe=tipe, antrian=antrian)
+                    else:
+                        return HttpResponse("Ada kesalahan")
             else:
                 berobat_form = BerobatForm()
+                obat_form = PengobatanForm(data=request.POST, instance=berkas)
 
             return render(request, 'dokter/detail_antrian.html', context={
                                                                         'berkas': berkas,
                                                                         'berobat_form': berobat_form,
-                                                                        'user': akun
+                                                                        'obat_form': obat_form,
+                                                                        'obats': obats,
+                                                                        'user': akun,
+                                                                        'waktu': waktu
                                                                     })
         if request.user.tipe == 'apoteker' and tipe == 'apoteker':
             berkas = PengobatanInfo.objects.get(id=antrian)
 
             if request.method == "POST":
+                penolakan_form = PenolakanForm(data=request.POST, instance=berkas)
                 selesai_form = SelesaiForm(data=request.POST)
-
-                if selesai_form.is_valid():
-                    if selesai_form.cleaned_data['selesai'] == '1':
-                        berkas.sudah_berobat = True
-                    elif selesai_form.cleaned_data['selesai'] == '0':
-                        berkas.sudah_ditangani = False
-                        berkas.sudah_berobat = False
-                        berkas.ditolak = True
-                    apoteker = ApotekerInfo.objects.get(user=request.user)
-                    berkas.apoteker = apoteker
-                    berkas.save()
-                else:
-                    return HttpResponse("Ada kesalahan")
+                if penolakan_form.is_valid():
+                    if selesai_form.is_valid():
+                        if selesai_form.cleaned_data['selesai'] == '1':
+                            berkas.sudah_berobat = True
+                            berkas.ditolak = False
+                        elif selesai_form.cleaned_data['selesai'] == '0':
+                            berkas = penolakan_form.save()
+                            berkas.sudah_berobat = False
+                            berkas.ditolak = True
+                        apoteker = ApotekerInfo.objects.get(user=request.user)
+                        berkas.apoteker = apoteker
+                        berkas.save()
+                        return redirect("pengobatan:detail_pengobatan", tipe=tipe, antrian=antrian)
+                    else:
+                        return HttpResponse("Ada kesalahan")
             else:
                 selesai_form = SelesaiForm()
+                penolakan_form = PenolakanForm(data=request.POST, instance=berkas)
 
             return render(request, 'apoteker/detail_antrian.html', context={
                                                                         'berkas': berkas,
                                                                         'selesai_form': selesai_form,
-                                                                        'user': akun
+                                                                        'penolakan_form': penolakan_form,
+                                                                        'user': akun,
+                                                                        'waktu': waktu
                                                                     })
         else:
             return redirect('pengobatan:beranda', tipe=request.user.tipe)
@@ -281,6 +317,7 @@ def tambah_poli(request, tipe):
 
     if request.user.is_authenticated:
         akun = load_akun_by_tipe(request.user, tipe)
+        dokter = DokterInfo.objects.all()
         if request.method == "POST":
             poli_form = PoliForm(data=request.POST)
             if poli_form.is_valid():
@@ -294,6 +331,35 @@ def tambah_poli(request, tipe):
         return render(request, 'petugas/tambah_poli.html', context={
                                                             'user': akun,
                                                             'poli_form': poli_form,
+                                                            'dokter': dokter
+                                                            })
+    else:
+        return redirect('welcome')
+
+def ubah_poli(request, tipe, nama_poli):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        poli_data = PoliInfo.objects.get(pk=nama_poli)
+        dokter = DokterInfo.objects.all()
+        poli = PoliInfo.objects.all()
+        if request.method == "POST":
+            poli_form = PoliForm(data=request.POST, instance=poli_data)
+            if poli_form.is_valid():
+                poli_form.save()
+                return redirect('pengobatan:poli', tipe=tipe)
+            else:
+                messages.info(request, "Perubahan gagal dilakukan")
+                return redirect("pengobatan:poli", tipe=tipe )
+        else:
+            poli_form = PoliForm()
+        return render(request, 'petugas/ubah_poli.html', context={
+                                                            'user': akun,
+                                                            'poli_form': poli_form,
+                                                            'dokter': dokter,
+                                                            'poli': poli
                                                             })
     else:
         return redirect('welcome')
@@ -305,6 +371,8 @@ def tambah_jadwal(request, tipe, nama_poli):
 
     if request.user.is_authenticated:
         akun = load_akun_by_tipe(request.user, tipe)
+        polis = PoliInfo.objects.all()
+        dokters = DokterInfo.objects.all()
         if request.method == "POST":
             jadwal_form = JadwalForm(data=request.POST)
             if jadwal_form.is_valid():
@@ -312,12 +380,14 @@ def tambah_jadwal(request, tipe, nama_poli):
                 return redirect('pengobatan:poli', tipe=tipe)
             else:
                 messages.info(request, "Perubahan gagal dilakukan")
-                return redirect("pengobatan:jadwal", tipe=tipe, nama_poli=nama_poli)
+                return redirect("pengobatan:poli", tipe=tipe)
         else:
             jadwal_form = JadwalForm()
         return render(request, 'petugas/tambah_jadwal.html', context={
                                                             'user': akun,
                                                             'jadwal_form': jadwal_form,
+                                                            'polis': polis,
+                                                            'dokters': dokters
                                                             })
     else:
         return redirect('welcome')
@@ -328,26 +398,59 @@ def ubah_jadwal(request, tipe, nama_poli, jadwal):
 
     if request.user.is_authenticated:
         akun = load_akun_by_tipe(request.user, tipe)
-        berubah = False
+        polis = PoliInfo.objects.all()
+        dokters = DokterInfo.objects.all()
         jadwal_data = JadwalPraktekInfo.objects.get(pk=jadwal)
         if request.method == "POST":
             jadwal_form = JadwalForm(data=request.POST, instance=jadwal_data)
             if jadwal_form.is_valid():
                 jadwal_data = jadwal_form.save()
-                berubah = True
                 return redirect('pengobatan:poli', tipe=tipe)
             else:
                 messages.info(request, "Perubahan gagal dilakukan")
-                return redirect("pengobatan:jadwal", tipe=tipe, nama_poli=nama_poli, jadwal=jadwal_data.id )
+                return redirect("pengobatan:poli", tipe=tipe)
         else:
             jadwal_form = JadwalForm(instance=jadwal_data)
         return render(request, 'petugas/ubah_jadwal.html', context={
-                                                            'berubah': berubah,
+                                                            'user': akun,
                                                             'jadwal_form': jadwal_form,
-                                                            'user': akun
+                                                            'polis': polis,
+                                                            'jadwal': jadwal_data,
+                                                            'dokters': dokters
                                                             })
     else:
         return redirect('welcome')
+
+# def ubah_jadwal(request, tipe, nama_poli, jadwal):
+#     waktu = datetime.now()
+#     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+
+#     if request.user.is_authenticated:
+#         akun = load_akun_by_tipe(request.user, tipe)
+#         berubah = False
+#         jadwal_data = JadwalPraktekInfo.objects.get(pk=jadwal)
+#         dokter = DokterInfo.objects.all()
+#         poli = PoliInfo.objects.all()
+#         if request.method == "POST":
+#             jadwal_form = JadwalForm(data=request.POST, instance=jadwal_data)
+#             if jadwal_form.is_valid():
+#                 jadwal_data = jadwal_form.save()
+#                 berubah = True
+#                 return redirect('pengobatan:poli', tipe=tipe)
+#             else:
+#                 messages.info(request, "Perubahan gagal dilakukan")
+#                 return redirect("pengobatan:jadwal", tipe=tipe, nama_poli=nama_poli, jadwal=jadwal_data.id )
+#         else:
+#             jadwal_form = JadwalForm(instance=jadwal_data)
+#         return render(request, 'petugas/ubah_jadwal.html', context={
+#                                                             'berubah': berubah,
+#                                                             'jadwal_form': jadwal_form,
+#                                                             'user': akun,
+#                                                             'dokter': dokter,
+#                                                             'poli': poli
+#                                                             })
+#     else:
+#         return redirect('welcome')
 
 # Halaman untuk menampilkan petunjuk dan merubah petunjuk
 def petunjuk(request, tipe):
@@ -397,6 +500,7 @@ def ubah_petunjuk(request, id, tipe):
 
             return render(request, 'petugas/ubah_petunjuk.html', context={
                                                             'petunjuk_form': petunjuk_form,
+                                                            'guides': guide,
                                                             'waktu': waktu,
                                                             'user': akun,
                                                         })
@@ -416,7 +520,7 @@ def log_obat(request, tipe):
 
         if request.user.tipe == 'dokter' and tipe == 'dokter':
             awal, akhir = waktu_hari_ini()
-            pasien_berobat = PengobatanInfo.objects.filter(dokter=akun, sudah_berobat=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            pasien_berobat = PengobatanInfo.objects.filter(dokter=akun, sudah_berobat=True)
             return render(request, 'dokter/log_pemberian_obat.html', context={
                                                                     'pasien_berobat': pasien_berobat,
                                                                     'waktu': waktu,
@@ -424,7 +528,7 @@ def log_obat(request, tipe):
                                                                 })
         if request.user.tipe == 'apoteker' and tipe == 'apoteker':
             awal, akhir = waktu_hari_ini()
-            pasien_berobat = PengobatanInfo.objects.filter(apoteker=akun, sudah_berobat=True, tanggal_berkunjung__gte=awal, tanggal_berkunjung__lte=akhir)
+            pasien_berobat = PengobatanInfo.objects.filter(apoteker=akun, sudah_berobat=True)
             return render(request, 'apoteker/log_obat_keluar.html', context={
                                                                     'pasien_berobat': pasien_berobat,
                                                                     'waktu': waktu,
@@ -435,15 +539,25 @@ def log_obat(request, tipe):
     else:
         return redirect('welcome')
 
-# def pengaturan(request):
-#     waktu = datetime.now()
-#     waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
-#     user = request.user
-#     if user.is_authenticated:
-#         akun = load_akun_by_tipe(user, user.tipe)
-#         if user.tipe == 'petugas':
-#             return render(request, 'petugas/pengaturan.html', {'waktu': waktu, 'user': akun})
-#         if user.tipe == 'dokter':
-#             return render(request, 'dokter/pengaturan.html', {'waktu': waktu, 'user': akun})
-#         if user.tipe == 'apoteker':
-#             return render(request, 'apoteker/pengaturan.html', {'waktu': waktu, 'user': akun})
+def resep_obat(request, tipe, antrian):
+    waktu = datetime.now()
+    waktu = waktu.strftime("%A, %d-%m-%Y %H:%M")
+    if request.user.is_authenticated:
+        akun = load_akun_by_tipe(request.user, tipe)
+        berkas = PengobatanInfo.objects.get(id=antrian)
+        if request.method == "POST":
+            obat_form = PengobatanForm(data=request.POST, instance=berkas)
+            if obat_form.is_valid():
+                berkas = obat_form.save()
+                return redirect("pengobatan:detail_pengobatan", tipe=tipe, antrian=antrian)
+            else:
+                return redirect("pengobatan:resep_obat", tipe=tipe, antrian=antrian)
+        else:
+            obat_form = PengobatanForm()
+        return render(request, 'dokter/resep_obat.html', context={
+                                                            'berkas': berkas,
+                                                            'user': akun,
+                                                            'obat_form': obat_form,
+                                                            })
+    else:
+        return redirect('welcome')

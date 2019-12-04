@@ -1,61 +1,161 @@
 {% extends 'dokter/sidebar.html' %}
 
-  {% block content %}
-  <div class="container">
-    <h1>Detail Berkas</h1>
-    <table>
-      <tbody>
-        <tr>
-          <td>Nama</td>
-          <td>{{ berkas.nama }}</td>
-        </tr>
-        <tr>
-          <td>Usia</td>
-          <td>{{ berkas.pasien.tanggal_lahir }}</td>
-        </tr>
-        <tr>
-          <td>Jenis Kelamin</td>
-          {% if berkas.pasien.jenis_kelamin == 'L' %}
-            <td>Laki-laki</td>
-          {% else %}
-            <td>Perempuan</td>
-          {% endif %}
-        </tr>
-        <tr>
-          <td>No. Rekam Medik</td>
-          <td>{{ berkas.pasien.rekam_medik }}</td>
-        </tr>
-        <tr>
-          <td>No. Kartu BPJS</td>
-          <td><img src="{{ berkas.pasien.bpjs.url }}" alt="surat bpjs" style="width: 300px;"></td>
-        </tr>
-        <tr>
-          <td>Keluhan</td>
-          <td>{{ berkas.keluhan }}</td>
-        </tr>
-        <tr>
-          <td>Poli</td>
-          <td>{{ berkas.poli }}</td>
-        </tr>
-        <tr>
-          <td>Dokter</td>
-          <td>{{ berkas.dokter }}</td>
-        </tr>
-        <tr>
-          <td>Jadwal Berobat</td>
-          <td>{{ berkas.tanggal_berkunjung }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    {% if berkas.sudah_ditangani %}
-        <h3>Berkas sudah ditangani</h3>
-      {% else %}
+{% block content %}
+<div class="modal fade" id="modal-primary">
+  <div class="modal-dialog">
+    <div class="modal-content bg-default">
+      <div class="modal-header">
+        <h4 class="modal-title">Form Resep Obat</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
         <form method="post">
           {% csrf_token %}
-          <button name="berobat" type="submit" value='1'>Panggil</button>
-          <button name="berobat" type="submit" value='0'>Pesan Obat</button>
+          <div class="form-group row">
+            <label for="obat" class="col-sm-3 col-form-label">Obat</label>
+            <div class="col-sm-9">
+              <select class="form-control" name="obat">
+                <option value="{{ berkas.obat.id }}" selected>{{ berkas.obat }}</option>
+                {% for drug in obats %}
+                  {% if drug != berkas.obat %}
+                  <option value="{{drug.id}}">{{ drug }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="dosis" class="col-sm-3 col-form-label">Dosis</label>
+            <div class="col-sm-9">
+              <input type="number" value="{{ berkas.dosis }}" name="dosis" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="aturan" class="col-sm-3 col-form-label">Aturan</label>
+            <div class="col-sm-9">
+              <input type="text" value="{{ berkas.aturan }}" name="aturan" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="catatan" class="col-sm-3 col-form-label">Catatan</label>
+            <div class="col-sm-9">
+              <input type="text" value="{{ berkas.catatan }}" name="catatan" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+              <button name="berobat" type="submit" class="btn btn-primary" value='1'>Pesan Obat</button>
+          </div>
         </form>
-    {% endif %}
+      </div>
+    </div>
   </div>
-  {% endblock %}
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><b>Detail Pasien</b></h3>
+      </div>
+    </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table m-0">
+              <tbody>
+              <tr>
+                <td>Nama</td>
+                <td>{{ berkas.pasien.nama }}</td>
+              </tr>
+              <tr>
+                <td>Usia</td>
+                <td>{{ berkas.pasien.tanggal_lahir }}</td>
+              </tr>
+              <tr>
+                <td>Jenis Kelamin</td>
+                {% if berkas.pasien.jenis_kelamin == 'L' %}
+                  <td>Laki-laki</td>
+                {% else %}
+                  <td>Perempuan</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>No. Rekam Medik</td>
+                <td>{{ berkas.pasien.rekam_medik }}</td>
+              </tr>
+              <tr>
+                <td>Keluhan</td>
+                <td>{{ berkas.keluhan }}</td>
+              </tr>
+              <tr>
+                <td>Poli</td>
+                <td>{{ berkas.jadwal.poli }}</td>
+              </tr>
+              <tr>
+                <td>Dokter</td>
+                <td>{{ berkas.dokter }}</td>
+              </tr>
+              <tr>
+                <td>Jadwal Berobat</td>
+                <td>{{ berkas.tanggal_berkunjung }}</td>
+              </tr>
+              <tr>
+                <td>No. Kartu BPJS</td>
+                <td>{{ berkas.pasien.nomor_bpjs }}</td>
+              </tr>
+              <tr>
+                <td>Surat Rujukan</td>
+                <td><img src="{{ berkas.rujukan.url }}" style="width: 300px;"></td>
+              </tr>
+              {% if berkas.obat %}
+              <tr>
+                <td>Resep Obat</td>
+                <td>{{ berkas.obat }}, {{ berkas.dosis }}</td>
+              </tr>
+              {% endif %}
+              {% if berkas.aturan %}
+              <tr>
+                <td>Aturan</td>
+                <td>{{ berkas.aturan }}</td>
+              </tr>
+              {% endif %}
+              {% if berkas.catatan %}
+              <tr>
+                <td>Catatan</td>
+                <td>{{ berkas.catatan }}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td>Status</td>
+                {% if berkas.sudah_ditangani %}
+                  {% if berkas.ditolak %}
+                  <td>
+                    <strong>Resep ditolak</strong>
+                    <p>{{ berkas.pesan_penolakan }}</p>
+                    <button type="button" class="btn btn-success swalDefaultSuccess">Panggil</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">Pesan Obat</button>
+                  </td>
+                  {% elif berkas.sudah_berobat %}
+                  <td>
+                    <strong>Selesai Berobat</strong>
+                  </td>
+                  {% else %}
+                    <td><strong>Pasien sedang menunggu obat</strong></td>
+                  {% endif %}
+                {% else %}
+                  <td>
+                  <strong>Pasien belum bertemu dokter</strong>
+                  <button type="button" class="btn btn-success swalDefaultSuccess">Panggil</button>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">Pesan Obat</button>
+                  </td>
+                {% endif %}
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> 
+      </div>
+  </div>
+</div>
+{% endblock %}

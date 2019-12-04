@@ -45,5 +45,10 @@ class PetunjukForm(forms.ModelForm):
 class PengobatanForm(forms.ModelForm):
     class Meta():
         model = PengobatanInfo
-        fields = '__all__'
+        fields = ['obat', 'dosis', 'aturan', 'catatan']
+
+class PenolakanForm(forms.ModelForm):
+    class Meta():
+        model = PengobatanInfo
+        fields = ['pesan_penolakan']
 

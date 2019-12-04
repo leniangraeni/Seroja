@@ -12,6 +12,7 @@
             <thead>
             <tr>
               <th width='30%'>Nama</th>
+              <th>Poli</th>
               <th>Keluhan</th>
             </tr>
             </thead>
@@ -19,7 +20,8 @@
               {% for pasien in antrian_pasien %}
                 <tr>
                   <td>{{ pasien.pasien }}</td>
-                  <td>{{ pasien.keluhan }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">Detail</a></td>
+                  <td>{{ pasien.jadwal.poli }}</td>
+                  <td>{{ pasien.keluhan }}<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}" style="float: right;" >Detail</a></td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -36,7 +38,7 @@
           <h3 class="card-title"><b>Status Pasien</b></h3>
         </div>
         <div class="card-body">
-          <table id="example2" class="table table-bordered table-hover">
+          <table id="example1" class="table table-bordered table-hover">
             <thead>
             <tr>
               <th width='30%'>Nama</th>
@@ -46,15 +48,14 @@
             <tbody>
             {% for resep in antrian_apotek %}
               <tr>
-                <td>{{ resep.pasien }}</td>
+                <td><a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">{{ resep.pasien }}</a></td>
                 {% if resep.sudah_berobat %}
-                  <td>Selesai<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
+                <td><font color="black">Selesai</font></td>
                 {% elif resep.ditolak %}
-                  <td>Resep ditolak<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
+                <td><font color="red">Resep ditolak</font></td>
                 {% else %}
-                  <td>Menunggu obat<a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=resep.pk %}">Detail</a></td>
+                <td><font color="green">Menunggu obat</font></td>
                 {% endif %}
-
               </tr>
             {% endfor %}
             </tbody>

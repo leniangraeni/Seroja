@@ -7,57 +7,58 @@
         <div class="card-header">
           <h3 class="card-title"><b>Antrian Pasien Ke Dokter</b></h3>
         </div>
+        <!-- /.card-header -->
         <div class="card-body">
           <table id="example2" class="table table-bordered table-hover">
             <thead>
-            <tr>
-              <th width='15%'>Nama</th>
-              <th width='15%'>Keluhan</th>
-              <th width='15%'>Poli</th>
-              <th width='15%'>Tanggal</th>
-              <th width='15%'>Waktu</th>
-              <th width='15'>Dokter</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for pasien in antrian_pasien %}
               <tr>
-                <td>{{ pasien.pasien }}</td>
-                <td>{{ pasien.keluhan }}</td>
-                <td>{{ pasien.jadwal.poli }}</td>
-                <td>{{ pasien.tanggal_berkunjung }}</td>
-                <td>{{ pasien.jadwal.waktu_mulai }} - {{ pasien.jadwal.waktu_selesai }}</td>
-                <td>{{ pasien.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}" style="float: right;">Detail</a></td>
+                <th width='15%'>Nama</th>
+                <th width='15%'>Keluhan</th>
+                <th width='15%'>Poli</th>
+                <th width='15%'>Tanggal</th>
+                <th width='15%'>Waktu</th>
+                <th width='15'>Dokter</th>
               </tr>
-            {% endfor %}
-            </tbody>
+              </thead>
+              <tbody>
+              {% for pasien in antrian_pasien %}
+                <tr>
+                  <td>{{ pasien.pasien }}</td>
+                  <td>{{ pasien.keluhan }}</td>
+                  <td>{{ pasien.jadwal.poli }}</td>
+                  <td>{{ pasien.tanggal_berkunjung }}</td>
+                  <td>{{ pasien.jadwal.waktu_mulai }} - {{ pasien.jadwal.waktu_selesai }}</td>
+                  <td>{{ pasien.dokter }} <a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}" style="float: right;">Detail</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+           
           </table>
         </div>
+        <!-- /.card-body -->
       </div>
-    </div>
-  </div>
+      <!-- /.card -->
 
-  <div class="row">
-    <div class="col-12">
       <div class="card">
         <div class="card-header">
           <h3 class="card-title"><b>Log Pasien Berobat</b></h3>
         </div>
+        <!-- /.card-header -->
         <div class="card-body">
-          <table id="example2" class="table table-bordered table-hover">
+          <table id="example1" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th width='15%'>Nama</th>
-              <th width='15%'>Keluhan</th>
-              <th width='15%'>Poli</th>
-              <th width='15%'>Tanggal</th>
-              <th width='15%'>Waktu</th>
-              <th width='15%'>Dokter</th>
-              <th width='10%'>Keterangan</th>
+              <th>Nama</th>
+              <th>Keluhan</th>
+              <th>Poli</th>
+              <th>Tanggal</th>
+              <th>Waktu</th>
+              <th>Dokter</th>
+              <th>Keterangan</th>
             </tr>
             </thead>
             <tbody>
-            {% for pasien in log_antrian %}
+              {% for pasien in log_antrian %}
               <tr>
                 <td><a href="{% url 'pengobatan:detail_pengobatan' tipe=request.user.tipe antrian=pasien.pk %}">{{ pasien.pasien }}</a></th>
                 <td>{{ pasien.keluhan }}</th>
@@ -88,11 +89,16 @@
                 </a></td>
                 </tr>
               {% endfor %}
-            <tr>
             </tbody>
+            
+            
           </table>
         </div>
+        <!-- /.card-body -->
       </div>
+      <!-- /.card -->
     </div>
+    <!-- /.col -->
   </div>
+  <!-- /.row -->
 {% endblock %}

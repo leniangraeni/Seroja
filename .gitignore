@@ -15,7 +15,7 @@ nbproject/private
 .vscode/
 .vs/
 db.sqlite3
-migrations
+/migrations
 
 // Node / Bower
 node_modules/
