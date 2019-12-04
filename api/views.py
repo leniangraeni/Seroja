@@ -119,9 +119,3 @@ def status_pasien(request):
             return Response(serialize_pengobatan.data, status=status.HTTP_200_OK)
         else:
             return Response(id_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def testing(request):
-    data = {'sample':'test_case'}
-    return Response(data, status=status.HTTP_200_OK)
