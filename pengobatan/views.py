@@ -24,7 +24,9 @@ def waktu_hari_ini():
 
 # Utilitas untuk mendapatkan informasi akun berdasarkan tipe
 def load_akun_by_tipe(user, tipe):
-    if tipe == 'petugas':
+    if tipe == 'pasien':
+        akun_data = PasienInfo.objects.get(user=user)
+    elif tipe == 'petugas':
         akun_data = PetugasInfo.objects.get(user=user)
     elif tipe == 'dokter':
         akun_data = DokterInfo.objects.get(user=user)
@@ -93,21 +95,21 @@ def ubah_profil(request, tipe):
                 return redirect("pengobatan:ubah_profil", tipe=tipe)
         else:
             profil_form = UbahProfilForm()
-        if request.user.tipe == 'petugas' and tipe == 'petugas': 
+        if request.user.tipe == 'petugas' and tipe == 'petugas':
             return render(request, 'petugas/ubah_profil.html', context={
                                                                 'berubah': berubah,
                                                                 'profil_form': profil_form,
                                                                 'user': akun,
                                                                 'waktu': waktu
                                                                 })
-        elif request.user.tipe == 'dokter' and tipe == 'dokter': 
+        elif request.user.tipe == 'dokter' and tipe == 'dokter':
             return render(request, 'dokter/ubah_profil.html', context={
                                                                 'berubah': berubah,
                                                                 'profil_form': profil_form,
                                                                 'user': akun,
                                                                 'waktu': waktu
                                                                 })
-        elif request.user.tipe == 'apoteker' and tipe == 'apoteker': 
+        elif request.user.tipe == 'apoteker' and tipe == 'apoteker':
             return render(request, 'apoteker/ubah_profil.html', context={
                                                                 'berubah': berubah,
                                                                 'profil_form': profil_form,
@@ -487,10 +489,10 @@ def ubah_petunjuk(request, id, tipe):
         if request.user.tipe == 'petugas' and tipe == 'petugas':
             berubah = False
             guide = get_object_or_404(Guideline, pk=id)
-            petunjuk_form = GuidelineForm(instance=guide) 
+            petunjuk_form = GuidelineForm(instance=guide)
             if request.method == "POST":
-                petunjuk_form = GuidelineForm(request.POST, request.FILES, instance=guide) 
-                if petunjuk_form.is_valid(): 
+                petunjuk_form = GuidelineForm(request.POST, request.FILES, instance=guide)
+                if petunjuk_form.is_valid():
                     petunjuk_form.save()
                     return redirect('pengobatan:petunjuk', tipe=request.user.tipe)
 

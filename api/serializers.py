@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PasienSerializer(serializers.ModelSerializer):
     class Meta():
         model = PasienInfo
-        field = ('user', 'nomor_bpjs', 'bpjs', 'rekam_medik', 'profil')
+        fields = ('nama', 'nomor_bpjs', 'bpjs', 'rekam_medik', 'profil')
 
 class JadwalSerializer(serializers.ModelSerializer):
     class Meta():

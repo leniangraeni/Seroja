@@ -113,6 +113,7 @@ def daftar_pengobatan(request):
 def status_pasien(request):
     awal, akhir = waktu_hari_ini()
     if request.method == "POST":
+        id_serializer = IdSerializer(data=request.data)
         if id_serializer.is_valid():
             pengobatan = PengobatanInfo.objects.get(id=id)
             serialize_pengobatan = PengobatanFullSerializer(pengobatan)
